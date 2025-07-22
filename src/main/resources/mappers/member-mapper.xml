@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "Https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberMapper">
+    <resultMap type="com.btw09.buyyourbrain.member.vo.Member" id="memberResultMap">
+        <result property="userNo" column="USER_NO"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="joinedAt" column="JOINED_AT"/>
+        <result property="expertise" column="EXPERTISE"/>
+    </resultMap>
+
+    <select id="findSelect" parameterType="_int" resultMap="memberResultMap">
+        SELECT * from MEMBER_SHK WHERE USER_NO = #{value}
+    </select>
+
+    <insert id="insertMember" parameterType="com.btw09.buyyourbrain.member.vo.Member">
+        <selectKey keyProperty="userNo" resultType="int" order="BEFORE">
+            SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO MEMBER_GENERAL(USER_NO, USER_ID, PASSWORD, USER_NAME, EMAIL, PHONE_NUMBER, ADDRESS_DETAIL, JOINED_AT, POINTS, IS_DELETED, CREATED_AT, UPDATED_AT)
+        VALUES(#{userNo}, #{userId}, #{userPwd}, #{userName}, #{email}, #{phone}, #{address}, #{enrollDate}, #{points}, #{isDelete}, #{createAt}, #{updateAt})
+    </insert>
+
+    <insert id="insertExpert" parameterType="com.btw09.buyyourbrain.member.vo.MemberExpert">
+        <selectKey keyProperty="userNo" resultType="int" order="BEFORE">
+            SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO MEMBER_EXPERT (USER_NO, USER_ID, PASSWORD, USER_NAME, EMAIL, PHONE_NUMBER, ADDRESS_DETAIL, JOINED_AT, POINTS, IS_DELETED, CREATED_AT, UPDATED_AT, EXPERTISE, PORTFOLIO_URL)
+        VALUES (#{userNo}, #{userId}, #{userPwd}, #{userName}, #{email}, #{phone}, #{address}, #{enrollDate}, #{points}, #{isDelete}, #{createAt}, #{updateAt}, #{category}, #{portUrl})
+    </insert>
+
+    <select id="loginMember" parameterType="com.btw09.buyyourbrain.member.vo.Member" resultType="com.btw09.buyyourbrain.member.vo.Member">
+        SELECT USER_NO AS userNo, USER_ID AS userId, PASSWORD AS userPwd, USER_NAME AS userName, EMAIL AS email, PHONE_NUMBER AS phone, ADDRESS_DETAIL AS address, JOINED_AT AS enrollDate, POINTS AS points, IS_DELETED AS isDelete, CREATED_AT AS createAt, UPDATED_AT AS updateAt
+        FROM MEMBER_GENERAL
+        WHERE USER_ID = #{userId} AND IS_DELETED = 'N'
+    </select>
+</mapper>
