@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.btw09.buyyourbrain.member.vo.Member;
 import com.btw09.buyyourbrain.member.vo.MemberExpert;
+import com.btw09.buyyourbrain.member.vo.MemberSHK;
 
 @Service
 public interface MemberService {
@@ -16,6 +17,9 @@ public interface MemberService {
 	    
 	    // 고수 유저 회원가입
 	    int insertExpert(MemberExpert expert);
+	    
+    	//김석현 테스트용 메소드	    	
+	    MemberSHK findSelect(int i);
 	    
 
 }

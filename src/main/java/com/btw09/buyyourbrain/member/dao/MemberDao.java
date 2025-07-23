@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.btw09.buyyourbrain.member.vo.Member;
 import com.btw09.buyyourbrain.member.vo.MemberExpert;
+import com.btw09.buyyourbrain.member.vo.MemberSHK;
 
 @Repository
 public class MemberDao {
@@ -25,6 +26,14 @@ public class MemberDao {
 		Member loginUser = sqlSession.selectOne("memberMapper.loginMember", m);
 		
 		return loginUser;
+	}
+
+	//김석현 테스트용 로직
+	public MemberSHK findSelect(SqlSessionTemplate sqlSession, int i) {
+		// TODO Auto-generated method stub
+		
+		MemberSHK resultMem = sqlSession.selectOne("memberMapper.findSelect", i);
+		return resultMem;
 	}
 
 }
