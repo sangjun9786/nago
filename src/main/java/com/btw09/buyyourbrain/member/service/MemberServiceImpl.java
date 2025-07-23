@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.btw09.buyyourbrain.member.dao.MemberDao;
 import com.btw09.buyyourbrain.member.vo.Member;
 import com.btw09.buyyourbrain.member.vo.MemberExpert;
+import com.btw09.buyyourbrain.member.vo.MemberSHK;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -37,6 +38,14 @@ public class MemberServiceImpl implements MemberService {
 			Member loginUser = dao.loginMember(sqlSession,m);
 			
 			return loginUser;
+		}
+
+	    
+	    //김석현 테스트용 로직
+		@Override
+		public MemberSHK findSelect(int i) {
+			// TODO Auto-generated method stub
+			return dao.findSelect(sqlSession, i);
 		}
 
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "Https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="memberMapper">
-    <resultMap type="com.btw09.buyyourbrain.member.vo.Member" id="memberResultMap">
+    <resultMap type="MemberSHK" id="memberResultMap">
         <result property="userNo" column="USER_NO"/>
         <result property="userName" column="USER_NAME"/>
         <result property="joinedAt" column="JOINED_AT"/>
@@ -34,4 +34,5 @@
         FROM MEMBER_GENERAL
         WHERE USER_ID = #{userId} AND IS_DELETED = 'N'
     </select>
+    
 </mapper>

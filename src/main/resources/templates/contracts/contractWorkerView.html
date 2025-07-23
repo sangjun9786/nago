@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>계약서 양식</title>
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<style type="text/css">
+ body {
+  font-family: 'Noto Sans KR', Arial, sans-serif;
+  background: #f9f9f9;
+}
+form {
+  max-width: 530px;
+  margin: 50px auto 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+  padding: 38px 34px 30px 34px;
+}
+fieldset {
+  border: none;
+  margin-bottom: 26px;
+  padding: 0;
+}
+legend {
+  font-size: 20px;
+  font-weight: bold;
+  color: #199fa1;
+  margin-bottom: 20px;
+  letter-spacing: 0.03em;
+}
+div {
+  margin-bottom: 19px;
+}
+label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #233;
+  margin-bottom: 5px;
+}
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 13px;
+  font-size: 15px;
+  border: 1.2px solid #dde4ea;
+  border-radius: 7px;
+  box-sizing: border-box;
+  background: #f5f9fb;
+  transition: border 0.2s;
+  margin-bottom: 2px;
+}
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border: 1.7px solid #19bcc4;
+  background: #f0fcff;
+}
+textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+input[readonly] {
+  background: #f5f5f7;
+  color: #666;
+  cursor: default;
+}
+input[type="checkbox"] {
+  width: 19px;
+  height: 19px;
+  accent-color: #19bcc4;
+  margin-right: 7px;
+}
+button[type="submit"] {
+  width: 100%;
+  padding: 15px 0;
+  background: linear-gradient(90deg, #12c2e9 20%, #199fa1 80%);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(25,159,161,0.10);
+  transition: background 0.2s, transform 0.08s;
+}
+button[type="submit"]:hover {
+  background: linear-gradient(90deg, #199fa1 10%, #12c2e9 90%);
+  transform: translateY(-2px) scale(1.03);
+}
+fieldset:last-of-type {
+  margin-bottom: 0;
+}
+@media (max-width: 600px) {
+  form { padding: 19px 7vw; }
+  legend { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<form th:action="@{/contracts/confirm}" method="post">
+	<!-- hidden 형태로 contractId를 전달  -->
+	<input type="hidden" name="contractId" th:value="${contract.contractId}">
+    <fieldset>
+        <legend>계약서 정보 [워커]</legend>
+
+        <div>
+            <label>계약명</label>
+            <input type="text" name="contractTitle" value="삼호홀딩스 2025년 경매 낙찰 계약" readonly>
+        </div>
+        <div>
+            <label>프로젝트명/업무명</label>
+            <input type="text" name="projectTitle" value="제218호 프로젝트" readonly>
+        </div>
+        <div>
+            <label>클라이언트(발주자)</label>
+            <input type="text" name="clientName" value="삼호홀딩스" readonly>
+        </div>
+        <div>
+            <label>워커(계약자)</label>
+            <input type="text" name="workerName" value="심래민" readonly>
+        </div>
+        <div>
+            <label>계약 금액</label>
+            <input type="text" name="amount" value="10,000,000 원" readonly>
+        </div>
+        <div>
+            <label>계약 기간</label>
+            <input type="text" name="period" value="2025.07.13 ~ 2025.07.18" readonly>
+        </div>
+        <div>
+            <label>지급 조건</label>
+            <input type="text" name="paymentRule" value="착수금 20% + 잔금 80%" readonly>
+        </div>
+        <div>
+            <label>특약사항(선택)</label>
+            <textarea name="specialNote" placeholder="예시: 납품 지연시 위약금, 추가작업시 협의 등"></textarea>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>계약서 확인</legend>
+        <div style="margin: 14px 0;">
+            <input type="checkbox" name="agree" required>
+            <span>상기 내용을 확인하고 계약에 동의합니다.</span>
+        </div>
+    </fieldset>
+
+    <button type="submit">계약서 발송</button>
+    
+</form>
+
+
+</body>
+</html>

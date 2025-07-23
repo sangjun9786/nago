@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>결제 완료</title>
+  <style>
+    body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f4f8fb; margin: 0; }
+    .container { max-width: 380px; margin: 80px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 32px rgba(0,0,0,0.10); padding: 54px 36px 38px 36px; text-align: center;}
+    .checkmark {
+      display: inline-block;
+      width: 82px;
+      height: 82px;
+      margin-bottom: 26px;
+    }
+    .circle {
+      stroke: #36c173;
+      stroke-width: 6;
+      fill: none;
+      animation: drawCircle 0.6s ease;
+    }
+    .check {
+      stroke: #36c173;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 44;
+      stroke-dashoffset: 44;
+      animation: drawCheck 0.42s 0.54s cubic-bezier(0.25,0.7,0.5,1) forwards;
+    }
+    @keyframes drawCircle {
+      from { stroke-dasharray: 0 257; }
+      to   { stroke-dasharray: 257 0; }
+    }
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1aa077;
+      margin-bottom: 12px;
+      margin-top: 2px;
+    }
+    .desc {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 35px;
+    }
+    .home-btn {
+      display: inline-block;
+      padding: 15px 0;
+      width: 100%;
+      background: linear-gradient(90deg, #36c173 60%, #23a8a4 100%);
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(54,193,115,0.09);
+      transition: background 0.18s, transform 0.09s;
+      text-decoration: none;
+      margin-top: 9px;
+    }
+    .home-btn:hover {
+      background: linear-gradient(90deg, #23a8a4 10%, #36c173 90%);
+      transform: translateY(-2px) scale(1.03);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 체크 애니메이션 SVG -->
+    <svg class="checkmark" viewBox="0 0 60 60">
+      <circle class="circle" cx="30" cy="30" r="25" stroke-dasharray="257" stroke-dashoffset="0"/>
+      <polyline class="check" points="18,32 28,41 42,22" />
+    </svg>
+    <div class="title">결제가 완료되었습니다!</div>
+    <div class="desc">프로젝트가 곧 시작됩니다.<br>진행 상황은 마이페이지에서 확인하실 수 있습니다.</div>
+    <a href="/boot" class="home-btn">홈으로 돌아가기</a>
+  </div>
+</body>
+</html>
