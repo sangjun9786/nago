@@ -69,14 +69,12 @@
     <span style="color:#aaa;">(최대 1~2분 소요될 수 있습니다)</span>
     </div>
     <div class="contact">문의: help@yourplatform.com</div>
-  </div>
+  </div>    
 
   <script th:inline="javascript">
-  var contextPath = "/boot"; // contextPath 경로
-  var contractId = '[[${contract.contractId}]]';
+	  var contextPath = "/boot"; // contextPath 경로
+	  var contractId = '[[${contract.contractId}]]';
     function forwardToPay(){
-
-
       location.href= contextPath +"/escros/paymentReady?contractId="+contractId;
     }
 

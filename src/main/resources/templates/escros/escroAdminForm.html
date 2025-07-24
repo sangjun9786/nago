@@ -45,6 +45,7 @@
     </div>
 
     <!-- 검색/필터 바 -->
+    <!-- 
     <div class="filter-bar">
       <input type="text" placeholder="프로젝트명/사용자 검색">
       <select>
@@ -56,6 +57,7 @@
       <input type="date">
       <button class="action-btn">검색</button>
     </div>
+     -->
 
     <!-- 예치/출금 내역 테이블 -->
     <table>
@@ -69,44 +71,41 @@
           <th>상태</th>
           <th>입금일</th>
           <th>출금일</th>
-          <th>관리</th>
+          <!-- <th>관리</th> -->
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1004</td>
-          <td>모바일앱 디자인</td>
-          <td>이클라</td>
-          <td>박워커</td>
-          <td>₩1,200,000</td>
-          <td class="status-hold">예치중</td>
-          <td>2025-07-16</td>
-          <td>-</td>
-          <td><button class="action-btn">출금 승인</button></td>
-        </tr>
-        <tr>
-          <td>1003</td>
-          <td>홈페이지 리뉴얼</td>
-          <td>홍길동</td>
-          <td>최프리</td>
-          <td>₩650,000</td>
-          <td class="status-released">출금완료</td>
-          <td>2025-07-15</td>
-          <td>2025-07-16</td>
-          <td><button class="action-btn" disabled>완료</button></td>
-        </tr>
-        <tr>
-          <td>1002</td>
-          <td>로고 디자인</td>
-          <td>박찬호</td>
-          <td>김프리</td>
-          <td>₩400,000</td>
-          <td class="status-cancel">취소됨</td>
-          <td>2025-07-13</td>
-          <td>-</td>
-          <td><button class="action-btn" disabled>취소</button></td>
-        </tr>
-      </tbody>
+     <tbody>
+	  <tr th:each="escrow : ${esList}">
+		<td th:text="${escrow.contractId}">계약ID</td>
+		<td>
+			<a th:href="@{|/escros/detail/${escrow.escrowId}|}" th:text="${escrow.projectName}" style="text-decoration:none; color:#2856a5; cursor:pointer;"></a>
+		 </td>
+		<td th:text="${escrow.clientName}">클라이언트</td>
+		<td th:text="${escrow.workerName}">워커</td>
+		 <td th:text="|₩${#numbers.formatInteger(escrow.totalAmount, 0, 'COMMA')}|">금액</td>
+          <td> 
+           	<span th:switch="${escrow.status}">
+		    <span th:case="'HELD'" style="color:#1dc6ae;">예치중</span>
+		    <span th:case="'PARTIAL_RELEASE'" style="color:orange">부분 지급</span>
+		    <span th:case="'RELEASED'" style="color:#ff007f;">지급완료</span>
+		    <span th:case="'REFUNDED'" style="color:#ff0000;">환불됨</span>
+		    </span>
+           </td>
+		<td th:text="${escrow.holdAt}">입금일</td>
+		  <td th:text="${escrow.firstReleaseAt != null ? escrow.firstReleaseAt : '-'}">출금일</td> 
+		<!-- <td>
+		  <button class="action-btn"
+			th:if="${escrow.status == 'HELD'}"
+			th:text="'출금 승인'"></button>
+		  <button class="action-btn" disabled
+			th:if="${escrow.status == 'released'}"
+			th:text="'완료'"></button>
+		  <button class="action-btn" disabled
+			th:if="${escrow.status == 'cancel'}"
+			th:text="'취소'"></button>
+		</td> -->
+	  </tr>
+	</tbody>
     </table>
   </div>
 </body>

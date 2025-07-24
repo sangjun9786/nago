@@ -5,6 +5,33 @@
 
 <mapper namespace="RFIDCardMapper">
 
+	<select id="getWorksiteId" resultType="_int">
+		SELECT 
+			WORKSITE_ID
+		FROM
+			RFID_READER
+		WHERE
+			READER_ID = #{readerId}
+	</select>
+	
+	<insert id="insertWorkSession" parameterType="RFIDrepDTO">
+		INSERT INTO WORK_SESSION
+			(
+			SESSION_ID,
+			WORKER_ID,
+			WORKSITE_ID,
+			STARTED_AT
+			)
+		VALUES (
+			SEQ_WORK_SESSION.NEXTVAL,
+			#{workerId},
+			#{workSiteID},
+			SYSDATE
+		)
+	</insert>
+
+
+
 	
 
     

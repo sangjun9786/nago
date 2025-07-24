@@ -229,7 +229,10 @@ public class ContractsController {
 		
 //		2.계약 객체 불러오기 
 		Contracts c = contractServ.getContractById(contractId);
+//		프로젝트 명 업데이트
+		int result = contractServ.updateProjectName(contractId, "웹사이트 UI 리디자인");
 		
+		System.out.println(result);
 		respondojb.setContractId(c.getContractId());
 		
 //		워커 id

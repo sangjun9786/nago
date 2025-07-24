@@ -5,21 +5,72 @@
 
 <mapper namespace="escrosMapper">
 
-<insert id="createEscrowByContractId" parameterType="map">
-	INSERT INTO ESCROW_TRANSACTION (
-					ESCROW_ID,
-                    CONTRACT_ID,
-                    TOTAL_AMOUNT,
-                    HOLD_AT
-                    ) 
-    VALUES(
-                    SEQ_ESCROW.NEXTVAL,
-                    #{contractId},
-                    #{totalValue},
-                    SYSDATE
-                    )
+	<resultMap type="Escrow" id="escrowResultMap">
+		<result property="escrowId" column="ESCROW_ID"/>
+		<result property="contractId" column="CONTRACT_ID"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT"/>
+		<result property="releasedAmount" column="RELEASED_AMOUNT"/>
+		<result property="refundedAmount" column="REFUNDED_AMOUNT"/>
+		<result property="status" column="STATUS"/>
+		<result property="holdAt" column="HOLD_AT"/>
+		<result property="firstReleaseAt" column="FIRST_RELEASE_AT"/>
+		<result property="finalReleaseAt" column="FINAL_RELEASE_AT"/>
+		<result property="refundedAt" column="REFUNDED_AT"/>
+	</resultMap>
+
+	<insert id="createEscrowByContractId" parameterType="map">
+		INSERT INTO ESCROW_TRANSACTION (
+						ESCROW_ID,
+	                    CONTRACT_ID,
+	                    TOTAL_AMOUNT,
+	                    HOLD_AT
+	                    ) 
+	    VALUES(
+	                    SEQ_ESCROW.NEXTVAL,
+	                    #{contractId},
+	                    #{totalValue},
+	                    SYSDATE
+	                    )
+		
+	</insert>
+
+	<select id="findAll" resultMap="escrowResultMap" >
+		SELECT * FROM ESCROW_TRANSACTION
+	</select>
 	
-</insert>
+	<select id="getEscrowById" parameterType="_int" resultMap="escrowResultMap">
+		SELECT 
+			*
+		FROM
+			ESCROW_TRANSACTION
+		WHERE
+			ESCROW_ID = #{value}
+	
+	</select>
+	
+	<update id="updateStatusDP" parameterType="map">
+		UPDATE
+			ESCROW_TRANSACTION
+		SET
+			TOTAL_AMOUNT = #{balance},
+			STATUS = 'PARTIAL_RELEASE ',
+			FIRST_RELEASE_AT = SYSDATE
+		WHERE
+			ESCROW_ID = #{escrowId}
+		
+	</update>
+	
+	<update id="escrosRefund" parameterType="_int">
+		UPDATE
+			ESCROW_TRANSACTION
+		SET
+			TOTAL_AMOUNT = 0,
+			STATUS = 'REFUNDED',
+			REFUNDED_AT = SYSDATE
+		WHERE
+			ESCROW_ID = #{escrowId}
+	
+	</update>
 
 	
 
