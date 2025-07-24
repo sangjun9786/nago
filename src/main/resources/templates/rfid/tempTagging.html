@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <meta charset="UTF-8">
+  <title>RFID 태깅 (임시 태깅 페이지)</title>
+  <style>
+    body { 
+      font-family: 'Noto Sans KR', Arial, sans-serif; 
+      background: #f8fafc; 
+      margin: 0;
+    }
+    .container {
+      max-width: 380px;
+      margin: 100px auto 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      padding: 56px 34px 44px 34px;
+      text-align: center;
+    }
+    .title {
+      font-size: 23px;
+      font-weight: 700;
+      color: #189fa1;
+      margin-bottom: 22px;
+      margin-top: 0;
+    }
+    .desc {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 28px;
+    }
+    .tag-btn {
+      display: inline-block;
+      width: 210px;
+      padding: 20px 0;
+      background: linear-gradient(90deg, #12c2e9 20%, #189fa1 80%);
+      color: #fff;
+      font-size: 22px;
+      font-weight: bold;
+      border: none;
+      border-radius: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(25,159,161,0.08);
+      transition: background 0.18s, transform 0.09s;
+      margin-bottom: 23px;
+      margin-top: 16px;
+    }
+    .tag-btn:active {
+      background: linear-gradient(90deg, #189fa1 10%, #12c2e9 90%);
+      transform: scale(0.97);
+    }
+    .tag-result {
+      font-size: 17px;
+      color: #1aa077;
+      font-weight: bold;
+      margin-top: 21px;
+      margin-bottom: 5px;
+      min-height: 28px;
+      letter-spacing: 0.01em;
+      transition: color 0.22s;
+    }
+    .icon-tag {
+      display: block;
+      margin: 0 auto 17px auto;
+      font-size: 48px;
+      color: #23a8a4;
+    }
+    @media (max-width: 520px) {
+      .container { padding: 24px 8vw; }
+      .tag-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="icon-tag">🔄</span>
+    <div class="title">RFID 태깅(임시)</div>
+    <div class="desc">
+      RFID 태그 대신 <strong>“태깅”</strong> 버튼을 클릭하면<br>
+      워크세션이 기록됩니다.
+    </div>
+    <button class="tag-btn" id="tagBtn">태깅</button>
+    <div class="tag-result" id="resultMsg"></div>
+  </div>
+  <script>
+	//가져온 데이터를 바탕으로 변수선언
+	var contextPath = "/boot";
+	var readerId = '[[${response.readerId}]]';
+	var workerId = '[[${response.workerId}]]';
+	var workSiteID = '[[${response.workSiteID}]]';
+  
+  	// 실제론 AJAX로 DB에 워크세션 등록
+    document.getElementById('tagBtn').addEventListener('click', function() {
+      // 임시: 1초 대기 후 "태깅 성공!" 출력 (실제론 fetch/$.ajax 활용)
+      console.log(readerId);
+      console.log(workerId);
+      console.log(workSiteID);
+      document.getElementById('resultMsg').innerText = "태깅 중...";
+      $.ajax({
+    	  url : contextPath + '/rfid-cards/createWorkSession',
+    	  method : 'POST',
+    	  data : {
+    		  readerId : readerId,
+    		  workerId : workerId,
+    		  workSiteID : workSiteID
+    	  },
+    	  success : function(result){
+    		  if (result === "success"){
+   		    	setTimeout(function() {
+   		            // 성공 메세지 (실제론 서버에서 응답값 처리)
+   		            document.getElementById('resultMsg').innerText = "태깅 성공! 워크세션이 기록되었습니다.";
+   		          }, 1000);
+    		  }
+    	  }
+      });
+    });
+  </script>
+</body>
+</html>

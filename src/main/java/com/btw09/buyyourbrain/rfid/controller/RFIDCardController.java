@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.btw09.buyyourbrain.rfid.model.dto.RFIDrepDTO;
 import com.btw09.buyyourbrain.rfid.model.service.RFIDCardService;
 import com.btw09.buyyourbrain.rfid.model.vo.RFIDCard;
 
@@ -58,35 +61,54 @@ public class RFIDCardController {
         rfidCardService.create(rfidCard);
         return "redirect:/rfid-cards";
     }
+   
+    //임시 태깅 페이지 
+    @GetMapping("/tempTaging/{readerId}/{workerId}")
+    public String tempTag(@PathVariable int readerId,
+                          @PathVariable int workerId,
+                          Model model) {
+    	//작업지 정보 구하기
+    	int worksiteId = rfidCardService.getWorksiteId(readerId);
+    	
+    	RFIDrepDTO dto = new RFIDrepDTO();
+    	
+    	dto.setReaderId(readerId);
+    	dto.setWorkerId(workerId);
+    	dto.setWorkSiteID(worksiteId);
+    	
+    	model.addAttribute("response", dto);
+    	
+    	
+    	
+        return "rfid/tempTagging";
+    }
+    
+    @PostMapping("/createWorkSession")
+    @ResponseBody
+    public String createWorkSession(@RequestParam("readerId") int readerId,
+    								@RequestParam("workerId") int workerId,
+    								@RequestParam("workSiteID") int workSiteID
+    								) {
+    	
+    	RFIDrepDTO dto = new RFIDrepDTO();
+    	
+    	System.out.println(readerId);
+    	System.out.println(workerId);
+    	System.out.println(workSiteID);
+    	
+    	dto.setReaderId(readerId);
+    	dto.setWorkerId(workerId);
+    	dto.setWorkSiteID(workSiteID);
+    	
+    	int result = rfidCardService.insertWorkSession(dto);
+    	
+    	if (result > 0) {
 
-    // 4. 상세 조회(Read One)
-    @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
-        RFIDCard card = rfidCardService.findById(id);
-        model.addAttribute("rfidCard", card);
-        return "rfid/detail";
+    		return "success";
+		}
+    	
+    	return "fail";
     }
 
-    // 5. 수정 폼(Update Form)
-    @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        RFIDCard card = rfidCardService.findById(id);
-        model.addAttribute("rfidCard", card);
-        return "rfid/edit";
-    }
-
-    // 6. 수정 처리(Update Action)
-    @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, @ModelAttribute RFIDCard rfidCard) {
-        rfidCardService.update(id, rfidCard);
-        return "redirect:/rfid-cards";
-    }
-
-    // 7. 삭제(Delete)
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-        rfidCardService.delete(id);
-        return "redirect:/rfid-cards";
-    }
 }
 

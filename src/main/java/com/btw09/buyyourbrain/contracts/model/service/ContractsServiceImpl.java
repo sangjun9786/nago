@@ -69,4 +69,10 @@ public class ContractsServiceImpl implements ContractsService {
 		return dao.updateStatusPro(sqlSession, contractId);
 	}
 
+	@Override
+	public int updateProjectName(int contractId, String string) {
+		// TODO Auto-generated method stub
+		return dao.updateProjectName(sqlSession, contractId,  string);
+	}
+
 }

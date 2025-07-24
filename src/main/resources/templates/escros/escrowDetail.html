@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>에스크로 상세정보</title>
+    <style>
+        body { font-family: 'Pretendard', Arial, sans-serif; margin: 40px; background: #f8fafc; }
+        .detail-box {
+            background: white; border-radius: 12px; box-shadow: 0 1px 8px #eee; width: 680px;
+            padding: 36px 34px 28px 34px; margin: 40px auto 0 auto;
+        }
+        table.detail-table { width: 100%; border-collapse: collapse; }
+        .detail-table th, .detail-table td {
+            padding: 10px 18px; text-align: left; font-size: 16px;
+        }
+        .detail-table th {
+            background: #00b7c4; color: #fff; width: 120px;
+        }
+        .detail-table td {
+            background: #fff; color: #232a3c;
+        }
+        .btn-wrap { text-align: right; margin-top: 38px; }
+        .action-btn  {
+            padding: 11px 30px; border: none; border-radius: 7px; background: #4186f5;
+            color: white; font-weight: 600; font-size: 16px; margin-left: 14px; cursor: pointer;
+        }
+        .action-btn:hover { background: #2856a5; }
+    </style>
+</head>
+<body>
+<div class="detail-box">
+    <h2 style="margin-bottom:18px; color:#232a3c; font-weight:700;">에스크로 상세 정보</h2>
+    <table class="detail-table">
+        <tr>
+            <th>에스크로ID</th>
+            <td th:text="${escrow.escrowId}"></td>
+            <th>계약ID</th>
+            <td th:text="${escrow.contractId}"></td>
+        </tr>
+        <tr>
+            <th>프로젝트명</th>
+            <td th:text="${escrow.projectName}"></td>
+            <th>상태</th>
+            <td> 
+            	<span th:switch="${escrow.status}">
+			    <span th:case="'HELD'" style="color:#1dc6ae;">예치중</span>
+			    <span th:case="'PARTIAL_RELEASE'" style="color:#2dc6ae;">부분 지급</span>
+			    <span th:case="'RELEASED'" style="color:#d63a3e;">지급완료</span>
+			    <span th:case="'REFUNDED'" style="color:#d63a3a;">환불됨</span>
+			  </span>
+            </td>
+        </tr>
+        <tr>
+            <th>클라이언트</th>
+             <td th:text="${escrow.clientName}"></td>
+            <th>워커</th>
+             <td th:text="${escrow.workerName}"></td>
+        </tr>
+        <tr>
+            <th>입금수단</th>
+            <td>카드결제</td>
+            <th>잔여 예치금</th>
+             <td th:text="|₩${#numbers.formatInteger(escrow.totalAmount - escrow.releasedAmount, 0, 'COMMA')}|"></td>
+        </tr>
+        <tr>
+            <th>선금 지불일</th>
+            <td th:text="${escrow.firstReleaseAt != null ? #dates.format(escrow.firstReleaseAt, 'yyyy-MM-dd HH:mm') : '-'}"></td>
+            <th>출금일</th>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th>마지막 변경일</th>
+            <td>2025-07-22 09:20</td>
+            <th>비고</th>
+            <td>-</td>
+        </tr>
+    </table>
+    <div class="btn-wrap">
+		<button th:if="${#strings.trim(escrow.status)} == 'HELD'" class="action-btn downPay">
+		    선금 지불
+		</button>
+        <button th:unless="${#strings.trim(escrow.status) == 'REFUNDED' || #strings.trim(escrow.status) == 'RELEASED'}" class="action-btn refund">환불 진행</button>
+    </div>
+</div>
+<script type="text/javascript">
+var contextPath = "/boot";
+var escrowId = '[[${escrow.escrowId}]]';
+var status = '[[${escrow.status}]]'
+
+function log(){
+	console.log(status);
+}
+
+$(document).ready(function() {
+
+    // 선금지불 버튼 이벤트
+    $('.action-btn.downPay').on('click', function(){
+        if (!confirm("선금을 발송하시겠습니까?")) return;
+        const price = prompt("발송한 금액을 입력해주세요");
+        if (!price || price.trim() === "") {
+            alert("금액을 입력하지 않으셨습니다");
+            return;
+        }
+        $.ajax({
+            url : contextPath + '/escros/payment/downPay',
+            method : 'POST',
+            data : {
+                escrowId : escrowId,
+                price : price
+            },
+            success : function(result){
+                if (result === "success"){
+                    location.reload();
+                } else {
+                    alert('통신 오류가 발생했습니다.');
+                }
+            }
+        });
+    });
+
+    // **여기에 두 번째, 세 번째 등 원하는 클릭/기타 이벤트 추가**
+    $('.action-btn.refund').on('click', function(){
+    	if (!confirm("환불을 진행하시겠습니까?")) return;
+    	
+    	//ajax
+    	$.ajax({
+    		url : contextPath + '/escros/payment/refund',
+    		method : 'POST',
+    		data : {
+    			escrowId : escrowId,
+    		},
+    		success : function(result){
+                if (result === "success"){
+                    location.reload();
+                } else {
+                    alert('통신 오류가 발생했습니다.');
+                }
+            }
+    	});
+    });
+
+   
+
+});
+
+
+</script>
+
+</body>
+</html>
