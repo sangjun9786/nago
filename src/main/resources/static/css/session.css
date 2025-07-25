@@ -1,0 +1,32 @@
+@charset "UTF-8";
+body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f4f7fb; margin: 0; }
+    .container { max-width: 820px; margin: 44px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 28px rgba(0,0,0,0.08); padding: 40px 32px; }
+    h2 { font-size: 24px; color: #189fa1; font-weight: bold; margin-top: 0; margin-bottom: 12px;}
+    /* --- 마일스톤 게이지 스타일 --- */
+    .milestones { display: flex; gap: 40px; margin-bottom: 36px; }
+    .gauge { display: flex; flex-direction: column; align-items: center; }
+    .gauge-label { font-size: 14px; font-weight: 600; margin-top: 13px; color: #555; }
+    .gauge-value { font-size: 18px; font-weight: bold; margin-top: 3px;}
+    /* 색상별 게이지 */
+    .gauge1 .circle-bar { stroke: #17b978; }
+    .gauge2 .circle-bar { stroke: #ffb43a; }
+    /* 게이지 SVG */
+    .gauge svg { width: 80px; height: 80px; }
+    .circle-bg { stroke: #e8eff2; stroke-width: 11; }
+    .circle-bar { stroke-width: 11; fill: none; stroke-linecap: round; transition: stroke-dasharray 0.7s; }
+    /* --- 출근부 표 스타일 --- */
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    th, td { padding: 13px 9px; text-align: center; font-size: 15px;}
+    th { background:  #00b7c4; font-weight: bold; }
+    tr { border-bottom: 1px solid #ecf1f2; }
+    tr:last-child { border-bottom: none; }
+    .status-complete { color: #17b978; font-weight: bold; }
+    .status-late { color: #ffb43a; font-weight: bold; }
+    .status-absence { color: #f35a5a; font-weight: bold; }
+    .status-no_tagging_out { color: orange; font-weight: bold; }
+    /* --- 기타 --- */
+    @media (max-width: 950px) {
+      .container { padding: 22px 7vw; }
+      .milestones { flex-direction: column; gap: 20px; }
+      .gauge { margin-bottom: 8px; }
+    }

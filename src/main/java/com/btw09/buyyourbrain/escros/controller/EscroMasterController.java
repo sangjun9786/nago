@@ -137,11 +137,6 @@ public class EscroMasterController {
         try {
         	int result = escroServ.createEscrowByContractId(contractId, totalValue); // 서비스 계층 구현
         	
-        	if (result >0 ) {
-        		
-        		System.out.println("에스크로 생성 성공~!!!!!!!!");
-				
-			}
         	
         	//           계약 상태 변경 로직 필요
         	return "success";
