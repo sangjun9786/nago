@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="worksessionMapper">
+
+	<resultMap type="WorkSession" id="sessionResultMap">
+		<result property="sessionId" column="SESSION_ID" />
+		<result property="workerId" column="WORKER_ID" />
+		<result property="worksiteId" column="WORKSITE_ID" />
+		<result property="startedAt" column="STARTED_AT" />
+		<result property="endedAt" column="ENDED_AT" />
+		<result property="status" column="STATUS" />
+		<result property="planDay" column="PLAN_DAY" />
+	</resultMap>
+	
+	<select id="findAll" resultMap="sessionResultMap">
+		SELECT 
+			SESSION_ID, 
+			WORKER_ID, 
+			WORKSITE_ID, 
+			STARTED_AT,
+			ENDED_AT,
+			STATUS,
+			PLAN_DAY
+		FROM
+			WORK_SESSION
+	
+	</select>
+	
+	<select id="countWorkingDay" parameterType="map" resultType="_int">
+	    
+	    SELECT COUNT(*) AS COMPLETE_COUNT
+	    FROM WORK_SESSION WS
+	    WHERE WS.WORKER_ID = 4
+	    AND WS.STARTED_AT BETWEEN 
+	        TO_DATE(#{startDate}, 'YYYY-MM-DD')
+	        AND (
+	            SELECT END_DATE
+	            FROM PROJECT_MILESTONE
+	            WHERE MILESTONE_ID = #{value}
+	        )
+	    AND WS.STATUS IN ('complete', 'late')
+	
+	</select>
+	
+	<select id="getEndDate" resultType="date">
+		SELECT 
+			END_DATE
+		FROM 
+			PROJECT_MILESTONE
+		WHERE
+			MILESTONE_ID = #{value}
+	</select>
+
+
+
+	
+
+    
+</mapper>
