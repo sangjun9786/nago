@@ -1,5 +1,7 @@
 package com.btw09.buyyourbrain.member.service;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import com.btw09.buyyourbrain.member.dao.MemberDao;
 import com.btw09.buyyourbrain.member.vo.Member;
 import com.btw09.buyyourbrain.member.vo.MemberExpert;
 import com.btw09.buyyourbrain.member.vo.MemberSHK;
+import com.btw09.buyyourbrain.member.vo.Worker;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -46,6 +49,32 @@ public class MemberServiceImpl implements MemberService {
 		public MemberSHK findSelect(int i) {
 			// TODO Auto-generated method stub
 			return dao.findSelect(sqlSession, i);
+		}
+
+		@Override
+		public List<MemberSHK> findAll() {
+			// TODO Auto-generated method stub
+			return dao.findAll(sqlSession);
+		}
+
+		@Override
+		public List<Worker> findWorkerAll() {
+			// TODO Auto-generated method stub
+			return dao.findWorkerAll(sqlSession);
+		}
+
+		@Override
+		public void insertWorker(MemberSHK mem) {
+			// TODO Auto-generated method stub
+			
+			dao.insertWorker(sqlSession, mem);
+			
+		}
+
+		@Override
+		public void updateWorkerCard(int workerId, int rfidID) {
+			// TODO Auto-generated method stub
+			dao.updateWorkerCard(sqlSession, workerId, rfidID);
 		}
 
 }

@@ -5,6 +5,15 @@
 
 <mapper namespace="RFIDCardMapper">
 
+	<resultMap type="RFIDCard" id="rfidCardResultMap">
+		<result property="rfidId" column="RFID_TAG_ID"/>
+		<result property="uid" column="UID"/>
+		<result property="isActive" column="IS_ACTIVE"/>
+		<result property="issuedAt" column="ISSUED_AT"/>
+		
+	
+	</resultMap>
+
 	<select id="getWorksiteId" resultType="_int">
 		SELECT 
 			WORKSITE_ID
@@ -29,6 +38,13 @@
 			SYSDATE
 		)
 	</insert>
+	
+	<select id="findAll" resultMap="rfidCardResultMap">
+		SELECT 
+			*
+		FROM
+			RFID_TAG
+	</select>
 
 
 
