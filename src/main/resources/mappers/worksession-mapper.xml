@@ -15,6 +15,14 @@
 		<result property="planDay" column="PLAN_DAY" />
 	</resultMap>
 	
+	<resultMap type="MileStone" id="milestoneResultMap">
+		<result property="milestoneId" column="MILESTONE_ID" />
+		<result property="contractId" column="CONTRACT_ID" />
+		<result property="endDate" column="END_DATE" />
+		<result property="startDate" column="START_DATE" />
+		<result property="isPaid" column="IS_PAID" />
+	</resultMap>
+	
 	<select id="findAll" resultMap="sessionResultMap">
 		SELECT 
 			SESSION_ID, 
@@ -41,7 +49,7 @@
 	            FROM PROJECT_MILESTONE
 	            WHERE MILESTONE_ID = #{value}
 	        )
-	    AND WS.STATUS IN ('complete', 'late')
+	    AND WS.STATUS IN ('complete', 'late' , 'no_tagging_out')
 	
 	</select>
 	
@@ -53,6 +61,25 @@
 		WHERE
 			MILESTONE_ID = #{value}
 	</select>
+	
+	<select id="getMileListByConId" parameterType="_int" resultMap="milestoneResultMap">
+		SELECT 
+			*
+		FROM 
+			PROJECT_MILESTONE 		
+		WHERE 
+			CONTRACT_ID = #{contractId}
+	
+	</select>
+	
+	<update id="updateMilePay" parameterType="_int">
+		UPDATE
+			PROJECT_MILESTONE
+		SET
+			IS_PAID = 'Y'
+		WHERE
+			MILESTONE_ID = #{milestoneId}
+	</update>
 
 
 

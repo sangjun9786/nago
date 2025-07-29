@@ -77,6 +77,17 @@
 		WHERE
 			CONTRACT_ID = #{contractId}
 	</update>
+	
+	<update id="updateStatusExpire" parameterType="_int">
+		UPDATE 
+			CONTRACT_SHK
+		SET 
+			STATUS = 'EXPIRED'
+		WHERE
+			CONTRACT_ID = #{contractId}
+	</update>
+	
+	
 
 	
 

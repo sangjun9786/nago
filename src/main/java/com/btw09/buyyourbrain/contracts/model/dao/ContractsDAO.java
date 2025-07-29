@@ -51,4 +51,9 @@ public class ContractsDAO {
 		return sqlSession.update("contractsMapper.updateProjectName", param);
 	}
 
+	public int updateStatusExpire(SqlSessionTemplate sqlSession, int contractId) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("contractsMapper.updateStatusExpire", contractId);
+	}
+
 }

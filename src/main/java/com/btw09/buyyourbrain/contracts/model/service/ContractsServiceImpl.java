@@ -75,4 +75,10 @@ public class ContractsServiceImpl implements ContractsService {
 		return dao.updateProjectName(sqlSession, contractId,  string);
 	}
 
+	@Override
+	public int updateStatusExpire(int contractId) {
+		// TODO Auto-generated method stub
+		return dao.updateStatusExpire(sqlSession, contractId);
+	}
+
 }
