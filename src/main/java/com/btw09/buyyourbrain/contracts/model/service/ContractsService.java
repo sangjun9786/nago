@@ -24,5 +24,7 @@ public interface ContractsService {
 
 //	[임의 메소드] 프로젝트 명 업데이트
 	int updateProjectName(int contractId, String string);
+// 계약 상태 변경 [만료]
+	int updateStatusExpire(int contractId);
 
 }

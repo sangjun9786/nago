@@ -32,8 +32,9 @@
     <div class="summary-cards">
       <div class="card">
         <div class="card-title">전체 예치금 잔액</div>
-        <div class="card-value">₩3,250,000</div>
+        <div class="card-value" th:text="|₩${#numbers.formatInteger(finalDeposit, 0, 'COMMA')}|"></div>
       </div>
+      <!--  
       <div class="card">
         <div class="card-title">금일 입금 합계</div>
         <div class="card-value">₩1,000,000</div>
@@ -42,6 +43,7 @@
         <div class="card-title">금일 출금 합계</div>
         <div class="card-value">₩500,000</div>
       </div>
+      -->
     </div>
 
     <!-- 검색/필터 바 -->

@@ -80,6 +80,7 @@
 		<button th:if="${#strings.trim(escrow.status)} == 'HELD'" class="action-btn downPay">
 		    선금 지불
 		</button>
+ 		<button th:if="${escrow.status != 'REFUNDED' and  (milestone.status != null)}" class="action-btn milePay" th:data-milestone-id="${milestone.milestoneId}">마일스톤 완료 지급</button>
         <button th:unless="${#strings.trim(escrow.status) == 'REFUNDED' || #strings.trim(escrow.status) == 'RELEASED'}" class="action-btn refund">환불 진행</button>
     </div>
 </div>
@@ -87,6 +88,8 @@
 var contextPath = "/boot";
 var escrowId = '[[${escrow.escrowId}]]';
 var status = '[[${escrow.status}]]'
+
+var milestoneId = $('.action-btn.milePay').data('milestone-id');
 
 function log(){
 	console.log(status);
@@ -138,6 +141,33 @@ $(document).ready(function() {
                 }
             }
     	});
+    });
+    
+    $('.action-btn.milePay').on('click', function(){
+    	if (!confirm("비용을 발송하시겠습니까?")) return;
+    	const price = prompt("발송한 금액을 입력해주세요");
+    	if (!price || price.trim() === "") {
+            alert("금액을 입력하지 않으셨습니다");
+            return;
+        }
+    	$.ajax({
+    		url : contextPath + '/escros/payment/milePay',
+    		method : 'POST',
+    		data : {
+    			escrowId : escrowId,
+    			milestoneId : milestoneId,
+    			price : price
+    		},
+    		success : function(result){
+                if (result === "success"){
+                    location.reload();
+                } else {
+                    alert('통신 오류가 발생했습니다.');
+                }
+            }
+    	});
+    	
+    	
     });
 
    

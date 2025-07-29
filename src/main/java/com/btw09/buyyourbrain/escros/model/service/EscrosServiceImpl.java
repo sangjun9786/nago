@@ -14,7 +14,10 @@ import com.btw09.buyyourbrain.contracts.model.vo.Contracts;
 import com.btw09.buyyourbrain.escros.model.dao.EscrosDAO;
 import com.btw09.buyyourbrain.escros.model.dto.EscrowViewDTO;
 import com.btw09.buyyourbrain.escros.model.vo.Escrow;
+import com.btw09.buyyourbrain.escros.model.vo.EscrowLog;
 import com.btw09.buyyourbrain.member.vo.MemberSHK;
+import com.btw09.buyyourbrain.worksession.model.vo.MileStone;
+import com.btw09.buyyourbrain.worksession.model.vo.WorkSession;
 
 @Service
 public class EscrosServiceImpl implements EscrosService {
@@ -35,9 +38,9 @@ public class EscrosServiceImpl implements EscrosService {
 	
 	//에스크로 데이터 생성 로직
 	@Override
-	public int createEscrowByContractId(int contractId, int totalValue) {
+	public int createEscrowByContractId(EscrowViewDTO dto) {
 		// TODO Auto-generated method stub
-		return dao.createEscrowByContractId(sqlSession, contractId, totalValue  );
+		return dao.createEscrowByContractId(sqlSession, dto );
 	}
 
 	@Override
@@ -88,6 +91,72 @@ public class EscrosServiceImpl implements EscrosService {
 	public int escrosRefund(int escrowId) {
 		// TODO Auto-generated method stub
 		return dao.escrosRefund(sqlSession, escrowId);
+	}
+
+	@Override
+	public int createEscrowLogHold(EscrowViewDTO dto) {
+		// TODO Auto-generated method stub
+		return dao.createEscrowLogHold(sqlSession, dto);
+	}
+
+	@Override
+	public List<EscrowLog> findEscrowLogStat(String string) {
+		// TODO Auto-generated method stub
+		return dao.findEscrowLogStat(sqlSession, string);
+	}
+
+	@Override
+	public List<EscrowLog> findEscrowLogStatEx(String string) {
+		// TODO Auto-generated method stub
+		return dao.findEscrowLogStatEx(sqlSession, string);
+	}
+
+	@Override
+	public int createEscrowLogDownpay(int escrowId, int price) {
+		// TODO Auto-generated method stub
+		return dao.createEscrowLogDownpay(sqlSession, escrowId, price);
+	}
+
+	@Override
+	public int createEscrowLogRefund(int escrowId, int refundPrice) {
+		// TODO Auto-generated method stub
+		return dao.createEscrowLogRefund(sqlSession, escrowId, refundPrice);
+	}
+
+	@Override
+	public WorkSession getWsByContractId(int contractId) {
+		// TODO Auto-generated method stub
+		return dao.getWsByContractId(sqlSession, contractId);
+	}
+
+	@Override
+	public List<MileStone> getMileListByConId(int contractId) {
+		// TODO Auto-generated method stub
+		return dao.getMileListByConId(sqlSession, contractId);
+	}
+
+	@Override
+	public int createEscrowLogMilePay(int escrowId, int price) {
+		// TODO Auto-generated method stub
+		return dao.createEscrowLogMilePay(sqlSession, escrowId, price);
+	}
+
+	@Override
+	public int createEscrowLogFinalPay(int escrowId, int price) {
+		// TODO Auto-generated method stub
+		return dao.createEscrowLogFinalPay(sqlSession, escrowId, price);
+	}
+
+	@Override
+	public int updateStatusFinal(int escrowId) {
+		// TODO Auto-generated method stub
+		return dao.updateStatusFinal(sqlSession, escrowId);
+	}
+
+	@Override
+	public int updateMilePay(int milestoneId) {
+		// TODO Auto-generated method stub
+		return dao.updateMilePay(sqlSession, milestoneId);
 	}
 	
 	

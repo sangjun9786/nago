@@ -21,7 +21,9 @@ import com.btw09.buyyourbrain.contracts.model.vo.Contracts;
 import com.btw09.buyyourbrain.escros.model.dto.EscrowViewDTO;
 import com.btw09.buyyourbrain.escros.model.service.EscrosService;
 import com.btw09.buyyourbrain.escros.model.vo.Escrow;
+import com.btw09.buyyourbrain.escros.model.vo.EscrowLog;
 import com.btw09.buyyourbrain.member.vo.MemberSHK;
+import com.btw09.buyyourbrain.worksession.model.vo.MileStone;
 
 @Controller
 @RequestMapping("/escros")
@@ -46,17 +48,17 @@ public class EscroMasterController {
 	@GetMapping("/paymentReady")
 	public String paymentReadyForm(int contractId, Model model) {
 
-		ContracResDTO respondojb = new ContracResDTO();
+		ContracResDTO respondobj = new ContracResDTO();
 
 //		1. 프로젝트 명 set
-		respondojb.setProjectName("웹사이트 UI 리디자인");
+		respondobj.setProjectName("웹사이트 UI 리디자인");
 		
 		int result = contractServ.updateProjectName(contractId, "웹사이트 UI 리디자인");
 
 //		2.계약 객체 불러오기 
 		Contracts c = contractServ.getContractById(contractId);
 
-		respondojb.setContractId(c.getContractId());
+		respondobj.setContractId(c.getContractId());
 
 //		워커 id
 		int workerId = c.getWorkerId();
@@ -66,18 +68,18 @@ public class EscroMasterController {
 		MemberSHK worker = contractServ.getObjectById(workerId);
 
 //		3. 워커이름 set
-		respondojb.setWorkerName(worker.getUserName());
+		respondobj.setWorkerName(worker.getUserName());
 
 //		4. 계약금을 기반으로 수수료 총 결제금액 구하기
 		int chargePay = (int) (contractPay * 0.05);
 		int totalPay = contractPay + chargePay;
 
-		respondojb.setAmountValue(contractPay);
-		respondojb.setChargeValue(chargePay);
-		respondojb.setTotalValue(totalPay);
+		respondobj.setAmountValue(contractPay);
+		respondobj.setChargeValue(chargePay);
+		respondobj.setTotalValue(totalPay);
 
 //		5. model에 값 넣어주기
-		model.addAttribute("response", respondojb);
+		model.addAttribute("response", respondobj);
 
 		return "escros/escrosPayRequest";
 
@@ -119,11 +121,35 @@ public class EscroMasterController {
     		
     	}
     	
-    	System.out.println(esList);
+//    	2.에스크로 로그를 불러오기
     	
-    	System.out.println("에스크로 관리자 화면 페이지 보는 로직 타는 중");
+    	//총 예치금액 구하기
+    	//HELD 상태의 에스크로 로그 데이터의 금액 데이터에서 이외의 상태를 뺄셈 연산함
+    	List<EscrowLog> depositList = escroServ.findEscrowLogStat("HELD");
+    	
+    	int totalDeposit = 0;
+    	
+    	for (EscrowLog depositLog : depositList) {
+    		
+    		totalDeposit += depositLog.getPayload();
+			
+		}
+    	
+    	List<EscrowLog> outList = escroServ.findEscrowLogStatEx("HELD");
+    	
+    	int totalOutput = 0;
+    	
+    	for (EscrowLog outputLog : outList) {
+    		
+    		totalOutput += outputLog.getPayload();
+			
+		}
+    	
+    	int finalDeposit = totalDeposit - totalOutput;
+    	
     	
     	model.addAttribute("esList", esList);
+    	model.addAttribute("finalDeposit", finalDeposit);
     	
     	return "escros/escroAdminForm";
     }
@@ -133,9 +159,18 @@ public class EscroMasterController {
     public String  createEscrowPayment(@RequestParam("contractId") int contractId, 
 									   @RequestParam("totalValue") int totalValue ) {
        
-    	// 에스크로 생성 로직 (ex: DB insert, 결제 연동 등)
+    	EscrowViewDTO dto = new EscrowViewDTO();
+    	
+    	dto.setContractId(contractId);
+    	dto.setTotalAmount(totalValue);
+    	
+    	// 에스크로 & 로그 생성 로직 (ex: DB insert, 결제 연동 등)
         try {
-        	int result = escroServ.createEscrowByContractId(contractId, totalValue); // 서비스 계층 구현
+        	int result = escroServ.createEscrowByContractId(dto); // 서비스 계층 구현
+        	
+        	int escrowId = dto.getEscrowId();
+        	
+        	int result2 = escroServ.createEscrowLogHold(dto);
         	
         	
         	//           계약 상태 변경 로직 필요
@@ -162,7 +197,26 @@ public class EscroMasterController {
         
     	EscrowViewDTO escrow = escroServ.getEscrowViewById(escrowId); // DTO 조회
         
-    	System.out.println(escrow);
+    	//계약 id를 통해 마일스톤 구하기 
+    	List<MileStone> mileList = escroServ.getMileListByConId(escrow.getContractId());
+    	
+    	//보낼 마일스톤 구하기
+    	MileStone nextPayMilestone = null;
+    	
+    	for (MileStone m : mileList) {
+    	    if ("complete".equals(m.getStatus()) && "N".equals(m.getIsPaid())) {
+    	        if (nextPayMilestone == null || m.getSeqNo() < nextPayMilestone.getSeqNo()) {
+    	            nextPayMilestone = m;
+    	        }
+    	    }
+    	}
+
+    	
+    	// 찾은 마일스톤을 모델에 담기 (null 체크)
+    	if (nextPayMilestone == null) {
+    		nextPayMilestone = new MileStone();
+    	}
+    	model.addAttribute("milestone", nextPayMilestone);
     	model.addAttribute("escrow", escrow);
         
     	return "escros/escrowDetail"; // 위 html 파일 이름
@@ -183,9 +237,10 @@ public class EscroMasterController {
     	
     	int balance = escrow.getTotalAmount() - price;
     	
-    	int result = escroServ.updateStatusDP(escrowId, balance);
+    	int updateResult = escroServ.updateStatusDP(escrowId, balance);
+    	int createResult = escroServ.createEscrowLogDownpay(escrowId, price);
     	
-    	if (result > 0) {
+    	if (updateResult > 0 && createResult > 0) {
 			
     		return "success";
 		}
@@ -199,14 +254,52 @@ public class EscroMasterController {
     	
     	EscrowViewDTO escrow = escroServ.getEscrowViewById(escrowId);
     	
-    	//에스크로 상태 환불 변경
-    	int result = escroServ.escrosRefund(escrowId);
+    	int refundPrice = escrow.getTotalAmount();
     	
-    	if (result > 0) {
+    	//에스크로 상태 환불 변경
+    	int updateResult = escroServ.escrosRefund(escrowId);
+    	int createResult = escroServ.createEscrowLogRefund(escrowId, refundPrice);
+    	
+    	if (updateResult > 0 && createResult > 0) {
 			
     		return "success";
 		}
     	return "fail";
+    }
+    
+    @PostMapping("/payment/milePay")
+    @ResponseBody
+    public String milePayEscros(
+    							@RequestParam("escrowId") int escrowId,
+    							@RequestParam("milestoneId") int milestoneId,
+								@RequestParam("price") int price
+    							) {
+//    	에스크로 업데이트 
+    	EscrowViewDTO escrow = escroServ.getEscrowViewById(escrowId);
+    	int balance = escrow.getTotalAmount() - price;
+    	
+    	int updateEscroResult = 0;
+    	int createLogResult = 0;
+    	int updateConResult = 0;
+    	
+    	
+    	if (balance != 0) {
+    		
+    		updateEscroResult = escroServ.updateStatusDP(escrowId, balance);
+    		createLogResult = escroServ.createEscrowLogMilePay(escrowId, price);
+			
+		}else {
+			
+			updateEscroResult = escroServ.updateStatusFinal(escrowId);
+			createLogResult = escroServ.createEscrowLogFinalPay(escrowId, price);
+			updateConResult = contractServ.updateStatusExpire(escrow.getContractId());
+			
+		}
+    	
+//    	마일스톤 업데이트
+    	int updateMileResult = escroServ.updateMilePay(milestoneId);
+    	
+    	return "success";
     }
 	
 
