@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>경매 목록 | BuyYourBrain</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .auction-card {
+      background-color: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: all 0.2s;
+    }
+
+    .auction-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .auction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .auction-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .auction-meta {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .tag {
+      background-color: #eee;
+      color: #444;
+      padding: 4px 10px;
+      margin-right: 6px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .btn-view {
+      background-color: #007bff;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .btn-view:hover {
+      background-color: #0056b3;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .status {
+      font-size: 13px;
+      font-weight: bold;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>진행 중인 경매 목록</h2>
+
+    <div id="auctionList">
+      <div class="auction-card" th:each="auction : ${auctionList}">
+        <div class="auction-header">
+          <div class="auction-title" th:text="${auction.title}">제목</div>
+          <div class="status" th:text="${auction.status}">진행중</div>
+        </div>
+
+        <div class="auction-meta">
+          <span th:text="'시작가: ' + ${#numbers.formatInteger(auction.startPrice, 0, 'COMMA')} + '원'"></span> /
+          <span th:text="'등록일: ' + ${#temporals.format(auction.createdAt, 'yyyy-MM-dd')}"></span> /
+          <span th:text="'업무시작일: ' + ${#temporals.format(auction.startDate, 'yyyy-MM-dd')}"></span>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <span class="tag" th:text="${auction.serviceId}">개발</span>
+          <span class="tag" th:text="${auction.regionId}">서울</span>
+          <span class="tag" th:if="${auction.isDirect == 'Y'}">즉시 낙찰 가능</span>
+          <span class="tag" th:if="${auction.endPrice != null}" th:text="'즉시가: ' + ${#numbers.formatInteger(auction.endPrice, 0, 'COMMA')} + '원'"></span>
+        </div>
+
+        <div class="text-right" style="margin-top: 10px;">
+          <a th:href="@{/auction/{id}(id=${auction.auctionRequestId})}" class="btn-view">상세보기</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="loading" style="text-align:center; color:#555; padding:10px;">로딩 중...</div>
+  </div>
+
+  <script>
+    let page = 1;
+    let loading = false;
+
+    const observer = new IntersectionObserver(async (entries) => {
+      const target = entries[0];
+      if (target.isIntersecting && !loading) {
+        loading = true;
+        page++;
+
+        const res = await fetch(`/auction/list?page=${page}`);
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const newCards = doc.querySelectorAll(".auction-card");
+
+        if (newCards.length > 0) {
+          newCards.forEach(card => document.querySelector("#auctionList").appendChild(card));
+          loading = false;
+        } else {
+          document.querySelector("#loading").textContent = "마지막 페이지입니다.";
+          observer.unobserve(document.querySelector("#loading"));
+        }
+      }
+    }, {
+      threshold: 1
+    });
+
+    observer.observe(document.querySelector("#loading"));
+  </script>
+</body>
+</html>

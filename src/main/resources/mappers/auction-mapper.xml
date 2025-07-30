@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="AuctionMapper">
+
+   <!--경매 등록-->
+   <insert id="AuctionRegister" parameterType="AuctionRequest">
+    INSERT INTO AUCTION_REQUEST (
+      AUCTION_REQUEST_ID,
+      USER_ID,
+      REGION_ID,
+      AUCTION_TYPE,
+      REQUEST_TYPE,
+      TITLE,
+      DESCRIPTION,
+      STATUS,
+      IS_DIRECT,
+      APPLY_TYPE,
+      START_DATE,
+      DUE_DATE,
+      START_PRICE,
+      END_PRICE,
+      AUCTION_STARTDAY,
+      AUCTION_ENDDAY,
+      SERVICE_ID
+    )
+    VALUES (
+      AUCTION_REQUEST_SEQ.NEXTVAL,
+      #{userId},
+      #{regionId},
+      #{auctionType},
+      #{requestType},
+      #{title},
+      #{description},
+      #{status},
+      #{isDirect},
+      #{applyType},
+      #{startDate},
+      #{dueDate},
+      #{startPrice},
+      #{endPrice},
+      #{auctionStartDay},
+      #{auctionEndDay},
+      #{serviceId}
+    )
+  </insert>
+  <!-- 경매 리스트 조회 -->
+  <select id="selectAuctionList" resultType="AuctionRequest">
+    SELECT 
+        AUCTION_REQUEST_ID,
+        USER_ID,
+        REGION_ID,
+        AUCTION_TYPE,
+        REQUEST_TYPE,
+        TITLE,
+        DESCRIPTION,
+        STATUS,
+        IS_DIRECT,
+        APPLY_TYPE,
+        START_DATE,
+        DUE_DATE,
+        START_PRICE,
+        END_PRICE,
+        AUCTION_STARTDAY,
+        AUCTION_ENDDAY,
+        CREATED_AT,
+        UPDATED_AT,
+        VIEW_COUNT,
+        BID_COUNT,
+        SERVICE_ID,
+        SELECTED_EXPERT_ID
+    FROM AUCTION_REQUEST
+    ORDER BY AUCTION_REQUEST_ID DESC
+</select>
+</mapper>
