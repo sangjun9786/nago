@@ -5,21 +5,209 @@
 
 <mapper namespace="escrosMapper">
 
-<insert id="createEscrowByContractId" parameterType="map">
-	INSERT INTO ESCROW_TRANSACTION (
-					ESCROW_ID,
-                    CONTRACT_ID,
-                    TOTAL_AMOUNT,
-                    HOLD_AT
-                    ) 
-    VALUES(
-                    SEQ_ESCROW.NEXTVAL,
-                    #{contractId},
-                    #{totalValue},
-                    SYSDATE
-                    )
+	<resultMap type="Escrow" id="escrowResultMap">
+		<result property="escrowId" column="ESCROW_ID"/>
+		<result property="contractId" column="CONTRACT_ID"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT"/>
+		<result property="releasedAmount" column="RELEASED_AMOUNT"/>
+		<result property="refundedAmount" column="REFUNDED_AMOUNT"/>
+		<result property="status" column="STATUS"/>
+		<result property="holdAt" column="HOLD_AT"/>
+		<result property="firstReleaseAt" column="FIRST_RELEASE_AT"/>
+		<result property="finalReleaseAt" column="FINAL_RELEASE_AT"/>
+		<result property="refundedAt" column="REFUNDED_AT"/>
+	</resultMap>
 	
-</insert>
+	<resultMap type="EscrowLog" id="escLogResultMap">
+		<result property="logId" column="LOG_ID"/>
+		<result property="escrowId" column="ESCROW_ID"/>
+		<result property="milestoneId" column="MILESTONE_ID"/>
+		<result property="eventType" column="EVENT_TYPE"/>
+		<result property="recipient" column="RECIPIENT"/>
+		<result property="payload" column="PAYLOAD"/>
+		<result property="createdAt" column="CREATED_AT"/>
+		<result property="description" column="DESCRIPTION"/>
+	</resultMap>
+
+	<insert id="createEscrowByContractId" parameterType="EscrowViewDTO">
+		<selectKey keyProperty="escrowId" resultType="int" order="BEFORE">
+			 SELECT SEQ_ESCROW.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO ESCROW_TRANSACTION (
+						ESCROW_ID,
+	                    CONTRACT_ID,
+	                    TOTAL_AMOUNT,
+	                    HOLD_AT
+	                    ) 
+	    VALUES(
+	                    #{escrowId},
+	                    #{contractId},
+	                    #{totalAmount},
+	                    SYSDATE
+	                    )
+		
+	</insert>
+
+	<select id="findAll" resultMap="escrowResultMap" >
+		SELECT * FROM ESCROW_TRANSACTION
+	</select>
+	
+	<select id="getEscrowById" parameterType="_int" resultMap="escrowResultMap">
+		SELECT 
+			*
+		FROM
+			ESCROW_TRANSACTION
+		WHERE
+			ESCROW_ID = #{value}
+	
+	</select>
+	
+	<update id="updateStatusDP" parameterType="map">
+		UPDATE
+			ESCROW_TRANSACTION
+		SET
+			TOTAL_AMOUNT = #{balance},
+			STATUS = 'PARTIAL_RELEASE',
+			FIRST_RELEASE_AT = SYSDATE
+		WHERE
+			ESCROW_ID = #{escrowId}
+		
+	</update>
+	
+	<update id="escrosRefund" parameterType="_int">
+		UPDATE
+			ESCROW_TRANSACTION
+		SET
+			TOTAL_AMOUNT = 0,
+			STATUS = 'REFUNDED',
+			REFUNDED_AT = SYSDATE
+		WHERE
+			ESCROW_ID = #{escrowId}
+	
+	</update>
+	
+		<update id="updateStatusFinal" parameterType="_int">
+			UPDATE
+				ESCROW_TRANSACTION
+			SET
+				TOTAL_AMOUNT = 0,
+				STATUS = 'RELEASED',
+				REFUNDED_AT = SYSDATE
+			WHERE
+				ESCROW_ID = #{escrowId}
+	</update>
+	
+	<insert id="createEscrowLogHold" parameterType="EscrowViewDTO">
+		INSERT INTO ESCROW_LOG (
+						LOG_ID,
+	                    ESCROW_ID,
+	                    EVENT_TYPE,
+	                    RECIPIENT,
+	                    PAYLOAD,
+	                    CREATED_AT	
+	                    ) 
+	    VALUES(
+	                    SEQ_ESCROW_LOG.NEXTVAL,
+	                    #{escrowId},
+	                    'HELD',
+	                    '에스크로 관리자',
+	                    #{totalAmount},
+	                    SYSDATE
+	                    )
+	
+	</insert>
+	
+	<insert id="createEscrowLogDownpay" parameterType="map">
+		INSERT INTO ESCROW_LOG (
+						LOG_ID,
+	                    ESCROW_ID,
+	                    EVENT_TYPE,
+	                    PAYLOAD,
+	                    CREATED_AT	
+	                    ) 
+	    VALUES(
+	                    SEQ_ESCROW_LOG.NEXTVAL,
+	                    #{escrowId},
+	                    'PARTIAL_RELEASE',
+	                    #{price},
+	                    SYSDATE
+	                    )
+	</insert>
+	
+	<insert id="createEscrowLogRefund" parameterType="map">
+		INSERT INTO ESCROW_LOG (
+						LOG_ID,
+	                    ESCROW_ID,
+	                    EVENT_TYPE,
+	                    PAYLOAD,
+	                    CREATED_AT	
+	                    ) 
+	    VALUES(
+	                    SEQ_ESCROW_LOG.NEXTVAL,
+	                    #{escrowId},
+	                    'REFUNDED',
+	                    #{refundPrice},
+	                    SYSDATE
+	                    )
+	
+	</insert>
+	
+	<!-- 예치금액 구하기 -->
+	<select id="findEscrowLogStat" parameterType="string" resultMap="escLogResultMap">
+		SELECT
+			*
+		FROM
+			ESCROW_LOG
+		WHERE
+			EVENT_TYPE = #{string}
+	
+	</select>
+	
+	<select id="findEscrowLogStatEx" parameterType="string" resultMap="escLogResultMap">
+		SELECT
+			*
+		FROM
+			ESCROW_LOG
+		WHERE
+			EVENT_TYPE != #{string}
+	
+	</select>
+	
+	<insert id="createEscrowLogMilePay" parameterType="map">
+		INSERT INTO ESCROW_LOG (
+						LOG_ID,
+	                    ESCROW_ID,
+	                    EVENT_TYPE,
+	                    PAYLOAD,
+	                    CREATED_AT	
+	                    ) 
+	    VALUES(
+	                    SEQ_ESCROW_LOG.NEXTVAL,
+	                    #{escrowId},
+	                    'PARTIAL_RELEASE',
+	                    #{price},
+	                    SYSDATE
+	                    )
+	</insert>
+	
+	<insert id="createEscrowLogFinalPay" parameterType="map">
+		INSERT INTO ESCROW_LOG (
+						LOG_ID,
+	                    ESCROW_ID,
+	                    EVENT_TYPE,
+	                    PAYLOAD,
+	                    CREATED_AT	
+	                    ) 
+	    VALUES(
+	                    SEQ_ESCROW_LOG.NEXTVAL,
+	                    #{escrowId},
+	                    'RELEASE',
+	                    #{price},
+	                    SYSDATE
+	                    )
+	</insert>
+	
+	
 
 	
 

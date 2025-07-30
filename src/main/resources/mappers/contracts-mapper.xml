@@ -43,7 +43,8 @@
 			WORKER_ID,
 			STATUS,
 			DUE_DATE,
-			CONTRACT_PRICE
+			CONTRACT_PRICE,
+			PROJECT_NAME
 		FROM 
 			CONTRACT_SHK
 		WHERE
@@ -59,7 +60,7 @@
 			CONTRACT_ID = #{contractId}
 	</update>
 	
-		<update id="updateStatusPro" parameterType="_int">
+	<update id="updateStatusPro" parameterType="_int">
 		UPDATE 
 			CONTRACT_SHK
 		SET 
@@ -67,6 +68,26 @@
 		WHERE
 			CONTRACT_ID = #{contractId}
 	</update>
+	
+	<update id="updateProjectName" parameterType="map">
+		UPDATE 
+			CONTRACT_SHK
+		SET 
+			PROJECT_NAME = #{string}
+		WHERE
+			CONTRACT_ID = #{contractId}
+	</update>
+	
+	<update id="updateStatusExpire" parameterType="_int">
+		UPDATE 
+			CONTRACT_SHK
+		SET 
+			STATUS = 'EXPIRED'
+		WHERE
+			CONTRACT_ID = #{contractId}
+	</update>
+	
+	
 
 	
 

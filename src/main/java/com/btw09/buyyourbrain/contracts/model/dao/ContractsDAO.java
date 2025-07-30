@@ -1,5 +1,8 @@
 package com.btw09.buyyourbrain.contracts.model.dao;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +37,23 @@ public class ContractsDAO {
 	public int updateStatusPro(SqlSessionTemplate sqlSession, int contractId) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("contractsMapper.updateStatusPro", contractId);
+	}
+
+	public int updateProjectName(SqlSessionTemplate sqlSession, int contractId, String string) {
+		// TODO Auto-generated method stub
+		
+		System.out.println(string+"체크");
+		Map<String,Object> param = new HashMap<>();
+		
+		param.put("contractId", contractId);
+		param.put("string", string);
+		
+		return sqlSession.update("contractsMapper.updateProjectName", param);
+	}
+
+	public int updateStatusExpire(SqlSessionTemplate sqlSession, int contractId) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("contractsMapper.updateStatusExpire", contractId);
 	}
 
 }
