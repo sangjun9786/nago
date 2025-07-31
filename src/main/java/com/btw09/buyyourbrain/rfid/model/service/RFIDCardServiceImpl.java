@@ -26,7 +26,7 @@ public class RFIDCardServiceImpl  implements RFIDCardService{
 	@Override
 	public List<RFIDCard> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return dao.findAll(sqlsession);
 	}
 
 	@Override

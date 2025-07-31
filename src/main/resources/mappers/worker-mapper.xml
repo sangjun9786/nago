@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "Https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="workerMapper">
+
+	<!-- 김석현 resultMap -->
+	<resultMap type="Worker" id="workerResultMap">
+        <result property="workerId" column="WORKER_ID"/>
+        <result property="workerName" column="WORKER_NAME"/>
+        <result property="isCertificated" column="IS_CERTIFICATED"/>
+        <result property="certificatedAt" column="CERTIFICATED_AT"/>
+        <result property="rfidTagId" column="RFID_TAG_ID"/>
+        <result property="available" column="AVAILABLE"/>
+        <result property="career" column="CAREER"/>
+        <result property="skills" column="SKILLS"/>
+        <result property="profileImageURL" column="PROFILE_IMAGE_URL"/>
+        <result property="portfolioLink" column="PORTFOLIO_LINK"/>
+        <result property="companyId" column="COMPANY_ID"/>
+    </resultMap>
+    
+    <select id="findAll" resultMap="workerResultMap">
+    	SELECT 
+    			*
+		FROM
+			WORKER_PROFILE
+    </select>
+    
+    <insert id="insertWorker" parameterType="MemberSHK">
+    	INSERT INTO 
+    		WORKER_PROFILE 
+    		(
+    		WORKER_ID,
+    		WORKER_NAME, 
+    		CERTIFICATED_AT, 
+    		SKILLS
+    		)
+		VALUES 
+			(
+			SEQ_WORKER.NEXTVAL,
+			#{userName},
+			SYSDATE,
+			#{expertise}
+			)
+    
+    </insert>
+    
+    <update id="updateWorkerCard" parameterType="map">
+    	UPDATE
+    		WORKER_PROFILE
+   		SET
+   			RFID_TAG_ID = #{rfidID}
+ 		WHERE
+ 			WORKER_ID = #{workerId}
+    
+    </update>
+    
+    
+    
+    
+</mapper>

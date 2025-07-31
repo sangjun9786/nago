@@ -2,6 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "Https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="memberMapper">
+
+	<!-- 김석현 resultMap -->
+	<resultMap type="Worker" id="workerResultMap">
+        <result property="workerId" column="WORKER_ID"/>
+        <result property="isCertificated" column="IS_CERTIFICATED"/>
+        <result property="certificatedAt" column="CERTIFICATED_AT"/>
+        <result property="rfidTagId" column="RFID_TAG_ID"/>
+        <result property="available" column="AVAILABLE"/>
+        <result property="career" column="CAREER"/>
+        <result property="skills" column="SKILLS"/>
+        <result property="profileImageURL" column="PROFILE_IMAGE_URL"/>
+        <result property="portfolioLink" column="PORTFOLIO_LINK"/>
+        <result property="companyId" column="COMPANY_ID"/>
+    </resultMap>
     <resultMap type="MemberSHK" id="memberResultMap">
         <result property="userNo" column="USER_NO"/>
         <result property="userName" column="USER_NAME"/>
@@ -11,6 +25,13 @@
 
     <select id="findSelect" parameterType="_int" resultMap="memberResultMap">
         SELECT * from MEMBER_SHK WHERE USER_NO = #{value}
+    </select>
+    
+    <select id="findAll" resultMap="memberResultMap">
+    	SELECT 
+    		*
+   		FROM
+   			MEMBER_SHK
     </select>
 
     <insert id="insertMember" parameterType="com.btw09.buyyourbrain.member.vo.Member">
@@ -34,5 +55,8 @@
         FROM MEMBER_GENERAL
         WHERE USER_ID = #{userId} AND IS_DELETED = 'N'
     </select>
+    
+    
+    
     
 </mapper>
