@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>계약서 서명 대기</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <style>
+    body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f4f8fb; }
+    h2 { font-size: 23px; color: #23a8a4; font-weight: bold; margin-top: 0; margin-bottom: 18px;}
+    @keyframes spin { to { transform: rotate(360deg); } }
+  	
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>계약서 서명 대기중</h2>
+    
+<!-- Stepper: 진행단계 표시 -->
+    <div class="stepper">
+    	<!-- Step 1 -->
+      <div class="step done">
+        <div class="step-circle">1</div>
+        <div class="step-title">클라이언트<br>서명완료</div>
+      </div>
+      <div class="line"></div>
+      <!-- Step 2 -->
+	  <div th:class="'step ' + (${contract.status} == 'PENDING_WORKER' ? 'active' : (${contract.status} == 'IN_PROGRESS' ? 'done' : 'active'))">
+	    <div class="step-circle">2</div>
+	    <div class="step-title">워커<br>
+	      <span th:text="${contract.status} == 'PENDING_WORKER' ? '서명대기' : (${contract.status} == 'IN_PROGRESS' ? '서명완료' : '서명대기')"></span>
+	    </div>
+	  </div>
+	  <div class="line"></div>
+	  <!-- Step 3 -->
+	  <div th:class="'step ' + (${contract.status} == 'PENDING_WORKER' ? '' : (${contract.status} == 'IN_PROGRESS' ? 'active' : ''))">
+	    <div class="step-circle">3</div>
+	    <div class="step-title">결제<br>
+		  <span th:text="${contract.status} == 'PENDING_WORKER' ? '대기 중' : (${contract.status} == 'IN_PROGRESS' ? '진행' : '대기 중')"></span>
+	    </div>
+	  </div>
+    </div>
+
+    
+    <!-- 상태 안내 -->
+    <div class="progress-text">
+    <span th:if="${contract.status} == 'PENDING_WORKER'">
+      워커(계약자)가<br>
+      <b>계약서 서명 대기중</b>입니다.<br>
+      잠시만 기다려주세요.
+      </span>
+    </div>
+    
+    <!-- 간단한 계약 정보 요약 -->
+    <div class="contract-info">
+      <div><label>프로젝트명</label> <span>제218호 프로젝트</span></div>
+      <div><label>계약자</label> <span th:text="${worker.userName}"></span></div>
+      <div><label>계약금액</label> <span th:text="${#numbers.formatInteger(pay, 0, 'COMMA')} + ' 원'"></span></div>
+      <div><label>계약기간</label> <span>2025.07.13 ~ 2025.07.18</span></div>
+    </div>
+    
+    <!-- 대기 스피너 -->
+    <div class="spinner" th:if="${contract.status} == 'PENDING_WORKER'"></div>
+
+    <!-- 결제 페이지로 이동 버튼  -->
+    <div class="button-container" th:if="${contract.status} == 'IN_PROGRESS'">
+     	<button class="forward-to-payment" onclick="forwardToPay();">결제 페이지로 이동</button>
+    </div>
+    <div class="tip" th:if="${contract.status} == 'PENDING_WORKER'">워커가 서명 완료 시 자동으로 결제 안내가 표시됩니다.<br>
+    <span style="color:#aaa;">(최대 1~2분 소요될 수 있습니다)</span>
+    </div>
+    <div class="contact">문의: help@yourplatform.com</div>
+  </div>
+
+  <script th:inline="javascript">
+  var contextPath = "/boot"; // contextPath 경로
+  var contractId = '[[${contract.contractId}]]';
+    function forwardToPay(){
+
+
+      location.href= contextPath +"/escros/paymentReady?contractId="+contractId;
+    }
+
+
+  </script>
+</body>
+</html>

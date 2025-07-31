@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <meta charset="UTF-8">
+  <title>결제 페이지 - BYB 중계 플랫폼</title>
+  <style>
+    body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f4f6fb; margin: 0; padding: 0; }
+    .container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); padding: 32px 24px; }
+    h2 { margin-top: 0; color: #222; font-weight: 700; }
+    .section { margin-bottom: 28px; }
+    .label { color: #888; font-size: 15px; margin-bottom: 4px; }
+    .value { font-size: 16px; font-weight: 500; }
+    .price-summary { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 12px 0; margin: 20px 0; }
+    .price-row { display: flex; justify-content: space-between; margin-bottom: 7px; }
+    .total { font-size: 18px; font-weight: 700; color: #0aa; }
+    .payment-methods { display: flex; gap: 18px; margin-top: 10px; }
+    .payment-methods label { cursor: pointer; }
+    .policy { color: #7a7a7a; font-size: 13px; margin-top: 18px; }
+    button { width: 100%; padding: 13px 0; background: #00b7c4; color: #fff; font-size: 18px; font-weight: 700; border: none; border-radius: 8px; margin-top: 18px; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #008995; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>결제하기</h2>
+    
+     <div class="section">
+      <div class="label">프로젝트</div>
+      <div class="value" th:text="${response.projectName}"></div>
+    </div>  
+    <div class="section">
+      <div class="label">프리랜서</div>
+      <div class="value" th:text="${response.workerName}"></div>
+    </div>
+    <div class="section">
+      <div class="label">요청사항</div>
+      <div class="value">모바일 반응형, Figma 파일 제공</div>
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row">
+        <div>작업비</div>
+        <div th:text="${#numbers.formatInteger(response.amountValue, 0, 'COMMA')} + ' 원'"></div>
+      </div>
+      <div class="price-row">
+        <div>플랫폼 수수료</div>
+        <div th:text="${#numbers.formatInteger(response.chargeValue, 0, 'COMMA')} + ' 원'"></div>
+      </div>
+      <div class="price-row total">
+        <div>총 결제금액</div>
+        <div th:text="${#numbers.formatInteger(response.totalValue, 0, 'COMMA')} + ' 원'"></div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="label">결제수단</div>
+      <div class="payment-methods">
+        <label><input type="radio" name="pay" checked> 신용카드</label>
+        <label><input type="radio" name="pay"> 계좌이체</label>
+        <label><input type="radio" name="pay"> 간편결제</label>
+      </div>
+    </div>
+    
+    <div class="policy">
+      결제 완료 후 프로젝트가 정상적으로 시작됩니다.<br>
+      중도 취소 시 환불정책은 <a href="#" style="color:#00b7c4;">여기서 확인</a>하세요.
+    </div>
+    
+    
+    <button class="payProgress" 
+        th:text="${#numbers.formatInteger(response.totalValue, 0, 'COMMA')} + ' 원 결제하기'"
+        id="payBtn"
+        th:data-contract-id="${response.contractId}">
+	</button>
+  </div>
+  
+  <!-- 드디어 ajax 삽입 -->
+  <!-- 버튼을 클릭하는 것은 즉, 에스크로 데이터를 삽입한다는 의미와 같다.  -->
+  <!-- 에스크로 생성 controller 매핑 주소 : /boot/escros/payment [post]  -->
+  <!-- 위에 메소드와 통신 성공시 이동하는 주소 : /boot/escros/paymentSuccess -->
+	<script type="text/javascript">
+		var contextPath = "/boot";
+		// 총 결제금액 
+		var totalValue = '[[${response.totalValue}]]';
+
+		$(document).ready(
+				function() {
+					$('#payBtn').on(
+							'click',
+							function() {
+								var contractId = $(this).data('contract-id');
+								$.ajax({
+									url : contextPath + '/escros/payment',
+									method : 'POST',
+									data : {
+										contractId : contractId,
+										totalValue : totalValue
+									},
+									success : function(result) {
+										if (result === "success") {
+											window.location.href = contextPath
+													+ '/escros/paymentSuccess';
+										} else {
+											alert('결제 요청 중 오류가 발생했습니다.');
+										}
+									}
+								});
+							});
+				});
+	</script>
+</body>
+</html>

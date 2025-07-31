@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.btw09.buyyourbrain.member.service.MemberService;
 import com.btw09.buyyourbrain.member.vo.Member;
+import com.btw09.buyyourbrain.member.vo.MemberDetail;
 import com.btw09.buyyourbrain.member.vo.MemberExpert;
 
 import jakarta.servlet.http.HttpSession;
@@ -127,6 +128,29 @@ public class MemberController {
 				
 			}
 		}
+	 
+	//고수 로그인 페이지 이동
+		 @GetMapping("/expert/login")
+		 public String showExpertLoginPage() {
+		     return "member/expertLoginPage"; // 고수 로그인 폼 위치
+		 }
+	 
+	 @PostMapping("/expert/login")
+	 public String loginExpert(@ModelAttribute MemberExpert expert,
+	                           HttpSession session,
+	                           Model model) {
+
+	     MemberExpert loginExpert = service.loginExpert(expert);
+
+	     if (loginExpert != null && expert.getUserPwd().equals(loginExpert.getUserPwd())) {
+	         session.setAttribute("alertMsg", "고수 로그인 성공!");
+	         session.setAttribute("loginExpert", loginExpert);
+	         return "redirect:/";
+	     } else {
+	         model.addAttribute("errorMsg", "고수 로그인 실패!");
+	         return "member/expertLoginPage";
+	     }
+	 }
 		
 		//로그아웃
 		@GetMapping("/logout")
@@ -140,6 +164,57 @@ public class MemberController {
 			//메인페이지로
 			return "redirect:/";
 		}
+		
+		
+		
+		
+		// 마이페이지 상세 등록 폼 이동
+		@GetMapping("/profile")
+		public String showMemberDetailForm(Model model, HttpSession session) {
+		    Member loginUser = (Member) session.getAttribute("loginUser");
+
+		    if (loginUser == null) {
+		    	session.setAttribute("alertMsg", "로그인 이후 이요하실 수 있는 서비스 입니다.");
+		        return "redirect:/member/login";
+		    }
+
+		    MemberDetail detail = service.selectMemberDetail(loginUser.getUserNo());
+		    if (detail == null) {
+		        detail = new MemberDetail(); // 새로 작성할 경우를 대비한 빈 객체
+		    }
+
+		    model.addAttribute("member", loginUser);
+		    model.addAttribute("memberDetail", detail);
+		    return "member/myPage"; // 마이페이지 등록/수정 폼 뷰
+		}
+
+		// 마이페이지 상세 등록 또는 수정 처리
+		@PostMapping("/profile")
+		public String submitMemberDetail(@ModelAttribute Member member,
+										 @ModelAttribute MemberDetail memberDetail,
+		                                 HttpSession session,
+		                                 Model model) {
+		    Member loginUser = (Member) session.getAttribute("loginUser");
+
+		    if (loginUser == null) {
+		        return "redirect:/member/login";
+		    }
+
+		    member.setUserNo(loginUser.getUserNo());
+		    memberDetail.setUserNo(loginUser.getUserNo());
+
+		    int memberResult = service.updateMember(member);
+		    int detailResult = service.updateMemberDetail(memberDetail); // insert or update
+
+		    if (memberResult > 0 && detailResult > 0) {
+		        session.setAttribute("alertMsg", "마이페이지 정보가 저장되었습니다.");
+		        return "redirect:/";
+		    } else {
+		        model.addAttribute("errorMsg", "마이페이지 저장에 실패했습니다.");
+		        return "common/errorPage";
+		    }
+		}
+		
 	 
 	 
 

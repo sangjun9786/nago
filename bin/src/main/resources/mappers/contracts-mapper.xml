@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="contractsMapper">
+	
+	<resultMap type="Contracts" id="contractResultMap">
+		<result property="contractId" column="CONTRACT_ID"/>
+		<result property="companyId" column="COMPANY_ID"/>
+		<result property="projectName" column="PROJECT_NAME"/>
+		<result property="status" column="STATUS"/>
+		<result property="signedAt" column="SIGNED_AT"/>
+		<result property="dueDate" column="DUE_DATE"/>
+		<result property="contractPrice" column="CONTRACT_PRICE"/>
+		<result property="paymentTerms" column="PAYMENT_TERMS"/>
+	</resultMap>
+
+
+	<insert id="insertContracts" parameterType="ContracReqtDTO">
+	    <selectKey resultType="int" keyProperty="contractId" order="BEFORE">
+	        SELECT SEQ_CONTRACT_SHK.NEXTVAL FROM dual
+	    </selectKey>
+		INSERT INTO CONTRACT_SHK (
+		    CONTRACT_ID,
+		    COMPANY_ID,
+		    WORKER_ID,
+		    DUE_DATE,
+		    CONTRACT_PRICE
+		) VALUES (
+		    #{contractId},
+		    #{companyId},
+		    #{selectedWorkerId},
+		    TO_DATE('2025-07-22', 'YYYY-MM-DD'),
+		    #{amountValue}
+		)
+	</insert>
+	
+	<select id="getContractById" parameterType="_int" resultMap="contractResultMap">
+		SELECT 
+			CONTRACT_ID, 
+			COMPANY_ID, 
+			WORKER_ID,
+			STATUS,
+			DUE_DATE,
+			CONTRACT_PRICE
+		FROM 
+			CONTRACT_SHK
+		WHERE
+			CONTRACT_ID = #{value}
+	</select>
+	
+	<update id="updateStatusPW" parameterType="_int">
+		UPDATE 
+			CONTRACT_SHK
+		SET 
+			STATUS = 'PENDING_WORKER'
+		WHERE
+			CONTRACT_ID = #{contractId}
+	</update>
+	
+		<update id="updateStatusPro" parameterType="_int">
+		UPDATE 
+			CONTRACT_SHK
+		SET 
+			STATUS = 'IN_PROGRESS'
+		WHERE
+			CONTRACT_ID = #{contractId}
+	</update>
+
+	
+
+    
+</mapper>

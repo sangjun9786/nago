@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="escrosMapper">
+
+<insert id="createEscrowByContractId" parameterType="map">
+	INSERT INTO ESCROW_TRANSACTION (
+					ESCROW_ID,
+                    CONTRACT_ID,
+                    TOTAL_AMOUNT,
+                    HOLD_AT
+                    ) 
+    VALUES(
+                    SEQ_ESCROW.NEXTVAL,
+                    #{contractId},
+                    #{totalValue},
+                    SYSDATE
+                    )
+	
+</insert>
+
+	
+
+    
+</mapper>

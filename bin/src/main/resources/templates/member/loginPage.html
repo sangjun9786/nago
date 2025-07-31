@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: 'Apple SD Gothic Neo', sans-serif;
-            background-color: #f9fafb;
+            background-color: #f5f6f7;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -16,83 +16,86 @@
 
         .login-container {
             background-color: white;
-            padding: 36px 42px;
+            padding: 40px 50px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             width: 360px;
-            box-sizing: border-box;
         }
 
         .login-container h2 {
             text-align: center;
             margin-bottom: 24px;
-            color: #222;
+            color: #333;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: #444;
             font-size: 14px;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
-            box-sizing: border-box;
+            transition: border 0.2s ease-in-out;
         }
 
         input[type="text"]:focus,
         input[type="password"]:focus {
-            border-color: #00b3b3;
+            border-color: #3a86ff;
             outline: none;
         }
 
         .button-group {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 24px;
+            justify-content: space-between;
+            margin-top: 12px;
         }
 
-        .login-button,
-        .register-button {
-            width: 100%;
+        .login-button {
+            width: 48%;
             padding: 12px;
-            font-size: 14px;
+            font-size: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #3a86ff;
+            color: white;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .login-button:hover {
+            background-color: #2f6fe4;
+        }
+        
+
+        .signup-button {
+            background-color: #4CAF50;
+            color: white;
+            width: 48%;
+            padding: 12px;
+            font-size: 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out;
-            text-align: center;
-            text-decoration: none;
-            color: white;
             display: inline-block;
-            box-sizing: border-box;
+            text-align: center;
+            line-height: 38px;
+            text-decoration: none;
         }
 
-        .login-button {
-            background-color: #00b3b3;
-        }
-
-        .login-button:hover {
-            background-color: #019494;
-        }
-
-        .register-button {
-            background-color: #f39c12;
-        }
-
-        .register-button:hover {
-            background-color: #d68910;
+        .signup-button:hover {
+            background-color: #45a049;
         }
 
         .error-msg {
@@ -104,10 +107,6 @@
     </style>
 </head>
 <body>
-
-<script th:if="${alertMsg}" th:inline="javascript">
-    alert([[${alertMsg}]]);  // 알림 메시지 출력
-</script>
 
 <div class="login-container">
     <h2>로그인</h2>

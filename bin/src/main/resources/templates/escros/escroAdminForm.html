@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>에스크로 계좌 관리 - 관리자</title>
+  <style>
+    body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f8fafb; margin: 0; }
+    .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 36px 32px; }
+    .summary-cards { display: flex; gap: 24px; margin-bottom: 32px; }
+    .card { flex: 1; background: #f1f6fa; border-radius: 12px; padding: 18px 22px; text-align: center; box-shadow: 0 1px 5px rgba(0,0,0,0.04);}
+    .card-title { font-size: 15px; color: #5a85a1; margin-bottom: 8px; }
+    .card-value { font-size: 26px; font-weight: bold; color: #199fa1; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 13px 10px; text-align: left; }
+    th { background: #e6f3f4; font-size: 14px; }
+    tr { border-bottom: 1px solid #ecf1f2; }
+    tr:last-child { border-bottom: none; }
+    .status-hold { color: #ff9800; font-weight: bold; }
+    .status-released { color: #23a35f; font-weight: bold; }
+    .status-cancel { color: #888; font-weight: bold; }
+    .filter-bar { margin-bottom: 16px; }
+    .filter-bar input, .filter-bar select { padding: 6px 10px; font-size: 14px; border: 1px solid #bcd2e3; border-radius: 6px; margin-right: 7px; }
+    .action-btn { background: #00b7c4; color: #fff; border: none; border-radius: 7px; padding: 7px 17px; cursor: pointer; font-weight: bold; }
+    .action-btn:disabled { background: #b0e0e7; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>에스크로 계좌 관리</h2>
+
+    <!-- 상단 요약 카드 -->
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-title">전체 예치금 잔액</div>
+        <div class="card-value">₩3,250,000</div>
+      </div>
+      <div class="card">
+        <div class="card-title">금일 입금 합계</div>
+        <div class="card-value">₩1,000,000</div>
+      </div>
+      <div class="card">
+        <div class="card-title">금일 출금 합계</div>
+        <div class="card-value">₩500,000</div>
+      </div>
+    </div>
+
+    <!-- 검색/필터 바 -->
+    <div class="filter-bar">
+      <input type="text" placeholder="프로젝트명/사용자 검색">
+      <select>
+        <option value="">상태 전체</option>
+        <option value="HOLD">예치중</option>
+        <option value="RELEASED">출금완료</option>
+        <option value="CANCEL">취소됨</option>
+      </select>
+      <input type="date">
+      <button class="action-btn">검색</button>
+    </div>
+
+    <!-- 예치/출금 내역 테이블 -->
+    <table>
+      <thead>
+        <tr>
+          <th>계약ID</th>
+          <th>프로젝트명</th>
+          <th>클라이언트</th>
+          <th>워커</th>
+          <th>예치금액</th>
+          <th>상태</th>
+          <th>입금일</th>
+          <th>출금일</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1004</td>
+          <td>모바일앱 디자인</td>
+          <td>이클라</td>
+          <td>박워커</td>
+          <td>₩1,200,000</td>
+          <td class="status-hold">예치중</td>
+          <td>2025-07-16</td>
+          <td>-</td>
+          <td><button class="action-btn">출금 승인</button></td>
+        </tr>
+        <tr>
+          <td>1003</td>
+          <td>홈페이지 리뉴얼</td>
+          <td>홍길동</td>
+          <td>최프리</td>
+          <td>₩650,000</td>
+          <td class="status-released">출금완료</td>
+          <td>2025-07-15</td>
+          <td>2025-07-16</td>
+          <td><button class="action-btn" disabled>완료</button></td>
+        </tr>
+        <tr>
+          <td>1002</td>
+          <td>로고 디자인</td>
+          <td>박찬호</td>
+          <td>김프리</td>
+          <td>₩400,000</td>
+          <td class="status-cancel">취소됨</td>
+          <td>2025-07-13</td>
+          <td>-</td>
+          <td><button class="action-btn" disabled>취소</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

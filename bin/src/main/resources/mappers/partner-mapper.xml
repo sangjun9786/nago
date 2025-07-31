@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="partnerMapper">
+
+	<resultMap type="PartnerCorp" id="partnerResultMap">
+		<result property="companyId" column="COMPANY_ID"/>
+		<result property="name" column="NAME"/>
+	</resultMap>
+	
+<select id="findSelect" parameterType="_int" resultType="PartnerCorp">
+    SELECT COMPANY_ID AS companyId, NAME AS name FROM PARTNER_COMPANY WHERE COMPANY_ID = #{value}
+</select>
+
+    
+</mapper>

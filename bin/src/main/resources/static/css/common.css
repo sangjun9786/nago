@@ -1,0 +1,194 @@
+@charset "UTF-8";
+.auction-result-box {
+	max-width: 540px;
+	margin: 50px auto;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 4px 18px #ddd;
+	padding: 28px 36px 32px 36px;
+}
+
+.auction-result-title {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-bottom: 24px;
+	border-bottom: 2px solid #222;
+	padding-bottom: 10px;
+}
+
+.auction-info-group {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 14px;
+}
+
+.auction-info-label {
+	font-weight: 600;
+	width: 100px;
+	display: inline-block;
+}
+
+.auction-info-value {
+	font-size: 1.08rem;
+}
+
+.auction-info-list {
+	margin-bottom: 18px;
+}
+
+.auction-btn-wrap {
+	text-align: center;
+	margin-top: 30px;
+}
+
+.auction-action-btn {
+	background: #3a69e5;
+	color: #fff;
+	font-weight: 700;
+	border: none;
+	padding: 13px 40px;
+	border-radius: 8px;
+	font-size: 1.08rem;
+	letter-spacing: 1px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.auction-action-btn:hover {
+	background: #254da5;
+}
+/* 경매 종료 페이지 스타일 end */
+
+/* 계약 대기 페이지 */
+.container {
+	max-width: 470px;
+	margin: 52px auto;
+	background: #fff;
+	border-radius: 18px;
+	box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+	padding: 38px 32px 30px 32px;
+}
+.stepper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+}
+
+.step {
+	text-align: center;
+	flex: 1;
+}
+
+.step-circle {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: #b8e2e4;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 5px auto;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.step.active .step-circle {
+	background: #23a8a4;
+}
+
+.step.done .step-circle {
+	background: #23a8a4;
+}
+
+.step-title {
+	font-size: 13px;
+	color: #466;
+}
+
+.line {
+	flex: none;
+	width: 44px;
+	height: 2px;
+	background: #d0e3e4;
+	margin: 0 5px;
+}
+
+.step.done .step-title {
+	color: #23a8a4;
+	font-weight: bold;
+}
+
+.progress-text {
+	color: #555;
+	font-size: 16px;
+	margin-bottom: 22px;
+}
+
+.contract-info {
+	background: #f7fafc;
+	border-radius: 10px;
+	padding: 14px 18px;
+	margin-bottom: 18px;
+}
+
+.contract-info label {
+	display: inline-block;
+	width: 110px;
+	font-size: 14px;
+	color: #899;
+}
+
+.contract-info span {
+	font-size: 15px;
+	font-weight: 500;
+	color: #222;
+}
+
+.spinner {
+	display: block;
+	margin: 24px auto 12px auto;
+	border: 3px solid #e6ecec;
+	border-top: 3px solid #23a8a4;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	animation: spin 1s linear infinite;
+}
+
+.tip {
+	color: #888;
+	font-size: 13px;
+	margin-top: 12px;
+}
+
+.contact {
+	color: #b6b;
+	font-size: 13px;
+	margin-top: 9px;
+}
+
+.forward-to-payment{
+		  width: 80%;
+		  padding: 15px 0;
+		  background: linear-gradient(90deg, #12c2e9 20%, #199fa1 80%);
+		  color: #fff;
+		  font-size: 18px;
+		  font-weight: bold;
+		  border: none;
+		  border-radius: 8px;
+		  margin-top: 10px;
+		  cursor: pointer;
+		  box-shadow: 0 2px 10px rgba(25,159,161,0.10);
+		  transition: background 0.2s, transform 0.08s;
+  	}
+  	.forward-to-payment:hover{
+  		  background: linear-gradient(90deg, #199fa1 10%, #12c2e9 90%);
+  		transform: translateY(-2px) scale(1.03);
+  	}
+  	/* 버튼 중앙정렬을 위한 부모 div 요소 */
+  	.button-container{
+  		text-align: center; 
+  	}
+  	/* 계약 대기 페이지 스타일 end */

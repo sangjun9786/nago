@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>제휴회사 워커 등록</title>
+  <style>
+    body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f8fafc; }
+    .container { max-width: 520px; margin: 46px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 22px rgba(0,0,0,0.09); padding: 40px 32px; }
+    h2 { text-align: center; color: #199fa1; font-size: 23px; margin-bottom: 28px;}
+    fieldset { border: none; margin-bottom: 28px; padding: 0; }
+    legend { font-size: 16px; color: #1aa077; font-weight: bold; margin-bottom: 18px;}
+    label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select { width: 100%; padding: 11px 12px; font-size: 15px; border: 1.2px solid #dde4ea; border-radius: 7px; background: #f5f9fb; margin-bottom: 15px; }
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    textarea:focus,
+    select:focus { border: 1.7px solid #19bcc4; background: #f0fcff;}
+    textarea { min-height: 46px; resize: vertical; }
+    .row { display: flex; gap: 13px;}
+    .row > div { flex: 1;}
+    button[type="submit"] { width: 100%; padding: 15px 0; background: #1aa077; color: #fff; font-size: 18px; font-weight: bold; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer; transition: background 0.2s;}
+    button[type="submit"]:hover { background: #157965;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>제휴회사 워커 등록</h2>
+    <form>
+      <!-- 회사 정보 -->
+      <fieldset>
+        <legend>회사 정보</legend>
+        <div>
+          <label>회사명</label>
+          <input type="text" name="companyName" value="삼호홀딩스" required>
+        </div>
+        <div>
+          <label>사업자 등록번호</label>
+          <input type="text" name="companyNumber" value="123-45-67890" required>
+        </div>
+        <div>
+          <label>담당자 이름</label>
+          <input type="text" name="managerName" value="이상훈">
+        </div>
+      </fieldset>
+
+      <!-- 계약 정보 -->
+      <fieldset>
+        <legend>계약 정보</legend>
+        <div>
+          <label>계약명</label>
+          <input type="text" name="contractTitle" value="2025 상반기 웹앱 유지보수">
+        </div>
+        <div class="row">
+          <div>
+            <label>계약 시작일</label>
+            <input type="date" name="contractStart" value="2025-07-22">
+          </div>
+          <div>
+            <label>계약 종료일</label>
+            <input type="date" name="contractEnd" value="2025-12-21">
+          </div>
+        </div>
+        <div>
+          <label>착수금</label>
+          <input type="text" name="downPayment" value="2,000,000" readonly>
+        </div>
+      </fieldset>
+
+      <!-- 워커 정보 -->
+      <fieldset>
+        <legend>워커 정보</legend>
+        <div>
+          <label>워커 ID</label>
+          <input type="text" name="workerId" value="WK202507">
+        </div>
+        <div>
+          <label>이름</label>
+          <input type="text" name="workerName" value="심래민">
+        </div>
+        <div>
+          <label>기술 스택</label>
+          <input type="text" name="workerSkill" value="Java, Spring, Oracle, AWS, React">
+        </div>
+        <div>
+          <label>경력/특이사항</label>
+          <textarea name="workerNote" readonly>프론트/백엔드 7년차, PG 연동 경험 풍부</textarea>
+        </div>
+      </fieldset>
+      <button type="submit">등록</button>
+    </form>
+  </div>
+</body>
+</html>

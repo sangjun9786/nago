@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.btw09.buyyourbrain.member.dao.MemberDao;
 import com.btw09.buyyourbrain.member.vo.Member;
+import com.btw09.buyyourbrain.member.vo.MemberDetail;
 import com.btw09.buyyourbrain.member.vo.MemberExpert;
 import com.btw09.buyyourbrain.member.vo.MemberSHK;
 
@@ -46,6 +47,31 @@ public class MemberServiceImpl implements MemberService {
 		public MemberSHK findSelect(int i) {
 			// TODO Auto-generated method stub
 			return dao.findSelect(sqlSession, i);
+		}
+		
+		
+		//회원 정보 조회
+		@Override
+		public MemberDetail selectMemberDetail(int userNo) {
+		    return dao.selectMemberDetail(sqlSession, userNo);
+		}
+		
+		//회원 정보 수정
+		@Override
+		public int updateMember(Member member) {
+		    return dao.updateMember(sqlSession, member);
+		}
+		
+		
+		@Override
+		public int updateMemberDetail(MemberDetail detail) {
+		    return dao.updateMemberDetail(sqlSession, detail);
+		}
+		
+		//고수 로그인 추가
+		@Override
+		public MemberExpert loginExpert(MemberExpert expert) {
+		    return dao.loginExpert(sqlSession, expert);
 		}
 
 }
