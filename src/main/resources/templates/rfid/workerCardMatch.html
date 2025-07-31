@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>RFID 카드 등록</title>
+   <link rel="icon" href="/boot/images/byb-canvas-logo.png" type="image/png">
   <style>
     body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f7f7f7; }
     .container { max-width: 400px; margin: 50px auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 18px rgba(0,0,0,0.06); padding: 34px 26px; }
@@ -15,21 +16,17 @@
 <body>
   <div class="container">
     <h2>워커 RFID 카드 등록</h2>
-    <form>
+    <form th:action="@{/rfid-cards/matching}" method="post">
       <label for="worker">워커 선택</label>
-      <select id="worker" name="worker">
+      <select id="worker" name=workerId>
         <option value="">워커를 선택하세요</option>
-        <option value="101">김프리랜서</option>
-        <option value="102">이워커</option>
-        <option value="103">박아르바이트</option>
+        <option th:each="worker : ${workers}" th:text="${worker.workerName}" th:value="${worker.workerId}"></option>
       </select>
 
       <label for="rfid">RFID 카드 선택</label>
-      <select id="rfid" name="rfid">
+      <select id="rfid" name="rfidId" >
         <option value="">RFID 카드키를 선택하세요</option>
-        <option value="1001">RFID-1001 (카드번호: 12A3-45B6-789C)</option>
-        <option value="1002">RFID-1002 (카드번호: 98F7-65E4-321D)</option>
-        <option value="1003">RFID-1003 (카드번호: A1B2-C3D4-E5F6)</option>
+        <option th:each="card : ${cardList}" th:text="${card.uid}" th:value="${card.rfidId}"></option>
       </select>
 
       <button type="submit">등록</button>

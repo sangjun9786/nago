@@ -3,6 +3,7 @@ package com.btw09.buyyourbrain.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.btw09.buyyourbrain.company.model.vo.PartnerCorp;
 import com.btw09.buyyourbrain.company.service.PartnerService;
@@ -53,6 +54,12 @@ public class HomeController {
     	
     	 return "main/worker"; 
     	
+    }
+    
+    @RequestMapping("/")
+    public String MainHome() {
+    	
+    	return "main/main";
     }
 
 }

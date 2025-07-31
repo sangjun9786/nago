@@ -1,5 +1,6 @@
 package com.btw09.buyyourbrain.rfid.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.btw09.buyyourbrain.member.service.MemberService;
+import com.btw09.buyyourbrain.member.vo.MemberSHK;
+import com.btw09.buyyourbrain.member.vo.Worker;
 import com.btw09.buyyourbrain.rfid.model.dto.RFIDrepDTO;
 import com.btw09.buyyourbrain.rfid.model.service.RFIDCardService;
 import com.btw09.buyyourbrain.rfid.model.vo.RFIDCard;
@@ -21,9 +25,11 @@ import com.btw09.buyyourbrain.rfid.model.vo.RFIDCard;
 public class RFIDCardController {
 
     private final RFIDCardService rfidCardService;
+    private  final MemberService memService;
 
-    public RFIDCardController(RFIDCardService rfidCardService) {
+    public RFIDCardController(RFIDCardService rfidCardService, MemberService memService) {
         this.rfidCardService = rfidCardService;
+        this.memService = memService;
     }
     
     //0. RFID_워커 매치
@@ -33,26 +39,72 @@ public class RFIDCardController {
      * 지금은 테스트용이라 07.16
      */
     @GetMapping("/assign")
-    public String forwardMatchForm() {
+    public String forwardMatchForm(Model model) {
     	
     	System.out.println("매칭 폼으로 이동");
+    	List<RFIDCard> cards = list();
+    	
+    	List<RFIDCard> activeList = new ArrayList<>();
+    	
+    	
+    	//작동 여부가 Y 인 카드만을 activeList에 삽입
+    	for (RFIDCard card : cards) {
+    		if ("Y".equals(card.getIsActive())) {
+    			
+    			activeList.add(card);
+				
+			}
+			
+		}
+    	
+    	List<Worker> workers = alterMemList();
+    	
+    	model.addAttribute("cardList", activeList);
+    	model.addAttribute("workers", workers);
     	
     	return "rfid/workerCardMatch";
     	
     }
-    // 1. 목록 조회(Read)
-    @GetMapping
-    public String list(Model model) {
+    
+    /**
+     * @return
+     * 모든 카드키 데이터 불러오는 로직
+     */
+    public List<RFIDCard> list() {
         List<RFIDCard> cards = rfidCardService.findAll();
-        model.addAttribute("cards", cards);
-        return "rfid/list";
+       
+        return cards;
+        
     }
 
-    // 2. 등록 폼(Create Form)
-    @GetMapping("/create")
-    public String createForm(Model model) {
-        model.addAttribute("rfidCard", new RFIDCard());
-        return "rfid/create";
+    public List<Worker> alterMemList() {
+    	List<MemberSHK> memList = memService.findAll();
+    	
+    	List<Worker> workerList = memService.findWorkerAll();
+    	
+    	if (workerList.isEmpty()) {
+			
+    		for (MemberSHK mem : memList) {
+    			
+    			memService.insertWorker(mem);
+    			
+    		}
+    		workerList = memService.findWorkerAll();
+		}
+    	
+    	
+        return workerList;
+    }
+    
+    @PostMapping("/matching")
+    public String workerMatchRFID(int workerId, int rfidId) {
+    	
+    	System.out.println(workerId);
+    	System.out.println(rfidId);
+    	
+    	memService.updateWorkerCard(workerId, rfidId);
+    	
+    	return "redirect:/";
     }
 
     // 3. 등록 처리(Create Action)

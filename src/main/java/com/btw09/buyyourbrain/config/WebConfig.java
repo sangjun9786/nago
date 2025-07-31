@@ -2,6 +2,7 @@ package com.btw09.buyyourbrain.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -27,6 +28,18 @@ public class WebConfig implements WebMvcConfigurer {
         //3. 워커 pending 접근권한 인터셉터
         registry.addInterceptor(new ContractStatusInterceptor(contractService))
         .addPathPatterns("/contracts/workerPending"); // 워커 서명대기 등 대기 페이지 경로
+    }
+    
+    /**
+     * 프론트와 백이 분리되어 있다면 cors 허용이 필요하다
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+    	// TODO Auto-generated method stub
+    	registry.addMapping("/boot/**")
+        .allowedOrigins("http://localhost:5173")
+        .allowedMethods("*");
+
     }
 }
 

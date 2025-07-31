@@ -16,8 +16,6 @@ public class RFIDCard {
     private String uid;
 //    IS_ACTIVE
     private String isActive; 
-//    WORKER_ID
-    private int workerId; // 할당 워커 이름(미할당시 null)
 //    ISSUED_AT
     private Date issuedAt;
 
