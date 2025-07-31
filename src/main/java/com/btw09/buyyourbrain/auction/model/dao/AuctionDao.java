@@ -21,5 +21,10 @@ public class AuctionDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("AuctionMapper.selectAuctionList");
 	}
+
+//	public AuctionRequest AuctionDetail(SqlSessionTemplate sqlSession, int auctionRequestId) {
+//		// TODO Auto-generated method stub
+//		return sqlSession.;
+//	}
 	
 }

@@ -10,7 +10,11 @@ import com.btw09.buyyourbrain.auction.model.vo.AuctionRequest;
 public interface AuctionService {
 	//경매등록
     int AuctionRegister(AuctionRequest ar);
+    
     //경매 리스트
     List<AuctionRequest>AuctionList();
+    
+    //상세 페이지
+	int AuctionDetail(int auctionRequestId);
 
 }

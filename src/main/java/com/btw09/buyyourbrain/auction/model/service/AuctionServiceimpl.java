@@ -17,14 +17,25 @@ public class AuctionServiceimpl implements AuctionService {
 	
 	@Autowired
     private AuctionDao Dao;
-
+	
+	//경매등록
     @Override
     public int AuctionRegister(AuctionRequest ar) {
         return Dao.AuctionRegister(sqlSession,ar);
     }
     
+    //경매리스트
     @Override
     public List<AuctionRequest> AuctionList() {
         return Dao.AuctionList(sqlSession);
     }
+
+    //경매상세페이지
+//	@Override
+//	public AuctionRequest AuctionDetail(int auctionRequestId) {
+//		// TODO Auto-generated method stub
+//		return Dao.AuctionDetail(sqlSession, auctionRequestId);
+//	}
+    
+    
 }

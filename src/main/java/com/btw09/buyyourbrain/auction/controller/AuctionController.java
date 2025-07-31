@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -100,5 +101,15 @@ public class AuctionController {
         List<AuctionRequest> list = service.AuctionList();
         model.addAttribute("auctionList", list);
         return "auction/auctionlist";
+    }
+    
+    // 경매등록 상세 페이지
+    @GetMapping("/auction/detail/{auctionRequestId}")
+    public String auctionDetail(@PathVariable("auctionRequestId")
+    							int auctionRequestId
+    							, Model model) {
+        AuctionRequest auction = service.AuctionDetail(auctionRequestId);
+        model.addAttribute("auction", auction);
+        return "auction/auctionDetail";
     }
 }
