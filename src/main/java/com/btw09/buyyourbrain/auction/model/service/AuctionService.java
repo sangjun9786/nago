@@ -15,6 +15,6 @@ public interface AuctionService {
     List<AuctionRequest>AuctionList();
     
     //상세 페이지
-	int AuctionDetail(int auctionRequestId);
+    AuctionRequest selectAuctionDetail(int auctionRequestId);
 
 }

@@ -104,11 +104,11 @@ public class AuctionController {
     }
     
     // 경매등록 상세 페이지
-    @GetMapping("/auction/detail/{auctionRequestId}")
-    public String auctionDetail(@PathVariable("auctionRequestId")
+    @GetMapping("/detail/{auctionRequestId}")
+    public String selectAuctionDetail(@PathVariable("auctionRequestId")
     							int auctionRequestId
     							, Model model) {
-        AuctionRequest auction = service.AuctionDetail(auctionRequestId);
+        AuctionRequest auction = service.selectAuctionDetail(auctionRequestId);
         model.addAttribute("auction", auction);
         return "auction/auctionDetail";
     }

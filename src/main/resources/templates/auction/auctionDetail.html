@@ -1,120 +1,158 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title th:text="${auction.title}">경매 상세</title>
   <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/session.css}">
   <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #f9f9f9;
+    .auction-container {
+      display: flex;
+      justify-content: space-between;
       padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .section {
+    .auction-main {
+      width: 70%;
+    }
+    .auction-sidebar {
+      width: 25%;
+      position: sticky;
+      top: 100px;
+      height: fit-content;
       background: #fff;
-      padding: 28px;
-      border-radius: 18px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-      margin-bottom: 32px;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
     }
-    h2 {
-      font-size: 18px;
+    .auction-status {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: #f2f2f2;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+    .auction-title {
+      font-size: 28px;
       font-weight: 700;
-      margin-bottom: 14px;
-      color: #222;
+      margin-bottom: 20px;
     }
-    .sub-label {
+    .auction-section {
+      margin-bottom: 28px;
+    }
+    .auction-section h4 {
+      font-size: 18px;
       font-weight: 600;
-      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .auction-section .content {
+      font-size: 15px;
       color: #333;
     }
-    .text {
-      margin-bottom: 8px;
-      line-height: 1.6;
+    .bid-button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 24px;
     }
   </style>
 </head>
 <body>
+<div class="auction-container">
+  <div class="auction-main">
+    <div class="auction-status" th:text="${auction.status}">진행중</div>
+    <div class="auction-title" th:text="${auction.title}">경매 제목</div>
 
-<div class="section">
-  <h2>프로젝트 개요</h2>
-  <div class="text">
-    <span class="sub-label">제목:</span>
-    <span th:text="${auction.title}">프로젝트 제목</span>
+    <div class="auction-section">
+      <h4>프로젝트 개요</h4>
+      <div class="content" th:text="${auction.description}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>지역</h4>
+      <div class="content" th:text="${auction.regionId}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>서비스 ID</h4>
+      <div class="content" th:text="${auction.serviceId}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 유형</h4>
+      <div class="content" th:text="${auction.auctionType}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>요청 유형</h4>
+      <div class="content" th:text="${auction.requestType}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>신청 방식</h4>
+      <div class="content" th:text="${auction.applyType}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 기간</h4>
+      <div class="content" th:text="${#temporals.format(auction.auctionStartDay, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(auction.auctionEndDay, 'yyyy-MM-dd HH:mm')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>업무 일정</h4>
+      <div class="content" th:text="${#temporals.format(auction.startDate, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(auction.dueDate, 'yyyy-MM-dd')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>등록일</h4>
+      <div class="content" th:text="${#temporals.format(auction.createdAt, 'yyyy-MM-dd HH:mm')}"></div>
+    </div>
   </div>
-  <div class="text">
-    <span class="sub-label">상세 설명:</span>
-    <span th:text="${auction.description}">프로젝트 설명</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">진행 상태:</span>
-    <span th:text="${auction.status}">진행중</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">지원 방식:</span>
-    <span th:text="${auction.applyType}">개인</span>
+
+  <div class="auction-sidebar">
+    <div class="auction-section">
+      <h4>최초 입찰가</h4>
+      <div class="content" th:text="${auction.startPrice} + '원'"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>현재 입찰가</h4>
+<!--       <div class="content" th:text="${auction.currentPrice} + '원'"></div> -->
+    </div>
+
+    <div class="auction-section" th:if="${auction.isDirect == 'Y'}">
+      <h4>즉시 낙찰가</h4>
+      <div class="content" th:text="${auction.endPrice} + '원'"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 시작</h4>
+      <div class="content" th:text="${#temporals.format(auction.auctionStartDay, 'yyyy-MM-dd')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 마감</h4>
+      <div class="content" th:text="${#temporals.format(auction.auctionEndDay, 'yyyy-MM-dd')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>조회수 / 입찰수</h4>
+      <div class="content" th:text="${auction.viewCount} + ' / ' + ${auction.bidCount}"></div>
+    </div>
+
+    <button class="bid-button">경매 입찰하기</button>
   </div>
 </div>
-
-<div class="section">
-  <h2>일정 및 낙찰</h2>
-  <div class="text">
-    <span class="sub-label">업무 시작일:</span>
-    <span th:text="${auction.startDate}">2025-08-01</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">납기 희망일:</span>
-    <span th:text="${auction.dueDate}">2025-09-30</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">경매 시작일시:</span>
-    <span th:text="${#temporals.format(auction.auctionStartDay, 'yyyy-MM-dd HH:mm')}">2025-07-30 09:00</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">경매 종료일시:</span>
-    <span th:text="${#temporals.format(auction.auctionEndDay, 'yyyy-MM-dd HH:mm')}">2025-07-31 18:00</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">즉시 낙찰:</span>
-    <span th:text="${auction.isDirect == 'Y' ? '가능' : '불가능'}">가능</span>
-  </div>
-</div>
-
-<div class="section">
-  <h2>가격 정보</h2>
-  <div class="text">
-    <span class="sub-label">시작 가격:</span>
-    <span th:text="${auction.startPrice}">5000000</span> 원
-  </div>
-  <div class="text">
-    <span class="sub-label">즉시 낙찰가:</span>
-    <span th:text="${auction.endPrice}">7000000</span> 원
-  </div>
-</div>
-
-<div class="section">
-  <h2>기타 정보</h2>
-  <div class="text">
-    <span class="sub-label">지역 ID:</span>
-    <span th:text="${auction.regionId}">1</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">카테고리 ID:</span>
-    <span th:text="${auction.serviceId}">101</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">작성일시:</span>
-    <span th:text="${#temporals.format(auction.createdAt, 'yyyy-MM-dd HH:mm')}">2025-07-29 12:00</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">조회수:</span>
-    <span th:text="${auction.viewCount}">0</span>
-  </div>
-  <div class="text">
-    <span class="sub-label">입찰 수:</span>
-    <span th:text="${auction.bidCount}">0</span>
-  </div>
-</div>
-
 </body>
 </html>

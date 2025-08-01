@@ -21,10 +21,12 @@ public class AuctionDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("AuctionMapper.selectAuctionList");
 	}
+	
+	//상세페이지 조회
+	public AuctionRequest selectAuctionDetail(SqlSessionTemplate sqlSession, int auctionRequestId) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("AuctionMapper.selectAuctionDetail",auctionRequestId);
+	}
 
-//	public AuctionRequest AuctionDetail(SqlSessionTemplate sqlSession, int auctionRequestId) {
-//		// TODO Auto-generated method stub
-//		return sqlSession.;
-//	}
 	
 }

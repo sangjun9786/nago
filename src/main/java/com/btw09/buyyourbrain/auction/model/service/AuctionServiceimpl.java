@@ -31,11 +31,11 @@ public class AuctionServiceimpl implements AuctionService {
     }
 
     //경매상세페이지
-//	@Override
-//	public AuctionRequest AuctionDetail(int auctionRequestId) {
-//		// TODO Auto-generated method stub
-//		return Dao.AuctionDetail(sqlSession, auctionRequestId);
-//	}
+	@Override
+	public AuctionRequest selectAuctionDetail(int auctionRequestId) {
+		// TODO Auto-generated method stub
+		return Dao.selectAuctionDetail(sqlSession, auctionRequestId);
+	}
     
     
 }
