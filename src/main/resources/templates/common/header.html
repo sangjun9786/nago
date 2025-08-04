@@ -1,0 +1,43 @@
+<!-- templates/fragments/header.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>헤더 조각</title>
+</head>
+<body>
+  <div th:fragment="header">
+    <header class="site-header" style="border-bottom: 1px solid #eee; background: #fff;">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
+        
+        <!-- 로고 / 왼쪽 -->
+        <div class="logo-area" style="display: flex; align-items: center;">
+          <a href="/">
+            <img th:src="@{/images/byb-canvas-logo.png}" alt="로고" style="height: 36px;">
+          </a>
+          <nav class="main-nav" style="display: flex; gap: 24px; margin-left: 24px;">
+            <a th:href="@{/auction/register}" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">경매등록</a>
+            <a th:href="@{/auction/list}" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">일반경매</a>
+            <a th:href="@{/common/coming-soon}" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">채팅경매</a>
+            <a th:href="@{/common/coming-soon}" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">작업세션</a>
+            <a th:href="@{/common/coming-soon}" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">RFID카드키 매칭</a>
+          </nav>
+        </div>
+
+        <!-- 오른쪽 메뉴 -->
+        <div class="user-area" style="display: flex; align-items: center; gap: 20px;">
+          <span th:if="${session.loginUserNo != null}">
+            <a href="/mypage" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">마이페이지</a>
+            <a href="/logout" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">로그아웃</a>
+          </span>
+
+          <span th:if="${session.loginUserNo == null}">
+            <a href="/login" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">로그인</a>
+            <a href="/signup" style="color:#23272f; text-decoration:none; font-size:15px; font-weight:500;">회원가입</a>
+          </span>
+        </div>
+      </div>
+    </header>
+  </div>
+</body>
+</html>

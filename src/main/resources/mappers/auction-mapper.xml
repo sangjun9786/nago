@@ -45,6 +45,37 @@
       #{serviceId}
     )
   </insert>
+  
+  <!-- 경매 리스트 전체 조회 -->
+	<select id="selectAuctionList" resultType="AuctionRequest">
+	  SELECT
+	    AUCTION_REQUEST_ID,
+	    USER_ID,
+	    REGION_ID,
+	    AUCTION_TYPE,
+	    REQUEST_TYPE,
+	    TITLE,
+	    DESCRIPTION,
+	    STATUS,
+	    IS_DIRECT,
+	    APPLY_TYPE,
+	    START_DATE,
+	    DUE_DATE,
+	    START_PRICE,
+	    END_PRICE,
+	    AUCTION_STARTDAY,
+	    AUCTION_ENDDAY,
+	    CREATED_AT,
+	    UPDATED_AT,
+	    VIEW_COUNT,
+	    BID_COUNT,
+	    SERVICE_ID,
+	    SELECTED_EXPERT_ID
+	  FROM
+	    AUCTION_REQUEST
+	  ORDER BY AUCTION_REQUEST_ID DESC
+	</select>
+  
   <!-- 경매 리스트 조회 -->
   <select id="selectAuctionDetail" parameterType="int" resultType="AuctionRequest">
     SELECT
