@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>카테고리 선택 메인페이지 예시</title>
@@ -39,6 +39,9 @@
   </style>
 </head>
 <body>
+  <!-- ✅ 헤더 조각 삽입 -->
+  <th:block th:replace="common/header :: header"></th:block>
+
   <div class="container">
     <!-- 상단 문구 -->
     <div class="headline">필요한 서비스를 쉽게 찾고<br>프로젝트를 시작하세요</div>

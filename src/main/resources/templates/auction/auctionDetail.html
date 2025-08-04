@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${auction.title}">경매 상세</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/session.css}">
+  <style>
+    .auction-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .auction-main {
+      width: 70%;
+    }
+    .auction-sidebar {
+      width: 25%;
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+    .auction-status {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: #f2f2f2;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+    .auction-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .auction-section {
+      margin-bottom: 28px;
+    }
+    .auction-section h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .auction-section .content {
+      font-size: 15px;
+      color: #333;
+    }
+    .bid-button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+<div class="auction-container">
+  <div class="auction-main">
+    <div class="auction-status" th:text="${auction.status}">진행중</div>
+    <div class="auction-title" th:text="${auction.title}">경매 제목</div>
+
+    <div class="auction-section">
+      <h4>프로젝트 개요</h4>
+      <div class="content" th:text="${auction.description}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>지역</h4>
+      <div class="content" th:text="${auction.regionId}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>서비스 ID</h4>
+      <div class="content" th:text="${auction.serviceId}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 유형</h4>
+      <div class="content" th:text="${auction.auctionType}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>요청 유형</h4>
+      <div class="content" th:text="${auction.requestType}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>신청 방식</h4>
+      <div class="content" th:text="${auction.applyType}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 기간</h4>
+      <div class="content" th:text="${#temporals.format(auction.auctionStartDay, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(auction.auctionEndDay, 'yyyy-MM-dd HH:mm')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>업무 일정</h4>
+      <div class="content" th:text="${#temporals.format(auction.startDate, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(auction.dueDate, 'yyyy-MM-dd')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>등록일</h4>
+      <div class="content" th:text="${#temporals.format(auction.createdAt, 'yyyy-MM-dd HH:mm')}"></div>
+    </div>
+  </div>
+
+  <div class="auction-sidebar">
+    <div class="auction-section">
+      <h4>최초 입찰가</h4>
+      <div class="content" th:text="${auction.startPrice} + '원'"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>현재 입찰가</h4>
+<!--       <div class="content" th:text="${auction.currentPrice} + '원'"></div> -->
+    </div>
+
+    <div class="auction-section" th:if="${auction.isDirect == 'Y'}">
+      <h4>즉시 낙찰가</h4>
+      <div class="content" th:text="${auction.endPrice} + '원'"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 시작</h4>
+      <div class="content" th:text="${#temporals.format(auction.auctionStartDay, 'yyyy-MM-dd')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>경매 마감</h4>
+      <div class="content" th:text="${#temporals.format(auction.auctionEndDay, 'yyyy-MM-dd')}"></div>
+    </div>
+
+    <div class="auction-section">
+      <h4>조회수 / 입찰수</h4>
+      <div class="content" th:text="${auction.viewCount} + ' / ' + ${auction.bidCount}"></div>
+    </div>
+
+    <button class="bid-button">경매 입찰하기</button>
+  </div>
+</div>
+</body>
+</html>

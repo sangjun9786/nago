@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>경매 등록 | BuyYourBrain</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', Arial, sans-serif;
+      background: #f9f9f9;
+    }
+    form {
+      max-width: 560px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+      padding: 38px 34px;
+    }
+    .form-step {
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #233;
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      font-size: 15px;
+      border: 1.2px solid #dde4ea;
+      border-radius: 7px;
+      background: #f5f9fb;
+      box-sizing: border-box;
+      transition: border 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border: 1.7px solid #19bcc4;
+      background: #f0fcff;
+    }
+    textarea {
+      height: 100px;
+      resize: none;
+      overflow-y: auto;
+    }
+	.btn {
+      width: 100%;
+      padding: 15px 0;
+      background: linear-gradient(90deg, #12c2e9 20%, #199fa1 80%);
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(25,159,161,0.10);
+      transition: background 0.2s, transform 0.08s;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #199fa1 10%, #12c2e9 90%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .d-none {
+      display: none !important;
+    }
+    .nav-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .nav-btns button {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <form th:action="@{/auction/register}" method="post" id="auctionForm">
+    <h2 style="text-align:center; margin-bottom: 18px;">경매 등록</h2>
+    <div id="stepIndicator" style="text-align:center; margin-bottom: 24px; font-weight:bold;">1 / 4</div>
+
+    <!-- STEP 1 -->
+    <div class="step-section" data-step="1">
+      <div class="form-step" id="step1">
+        <label>카테고리</label>
+        <select name="category" id="category" required>
+          <option value="" selected disabled>카테고리를 선택하세요</option>
+          <option value="dev">개발</option>
+          <option value="design">디자인</option>
+        </select>
+      </div>
+      <div class="form-step d-none" id="step2">
+        <label>지원 방식</label>
+        <select name="applyType" id="applyType" required>
+          <option value="" selected disabled>지원 방식을 선택하세요</option>
+          <option value="general">일반경매</option>
+          <option value="chat">채팅경매</option>
+        </select>
+      </div>
+      <div class="form-step d-none" id="step3">
+        <label>경매 주체</label>
+        <select name="requestType" id="requestType" required>
+          <option value="" selected disabled>경매 주체를 선택하세요</option>
+          <option value="individual">개인</option>
+          <option value="team" disabled>팀 (추후 지원 예정)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-section d-none" data-step="2">
+      <div class="form-step" id="step4">
+        <label>경매 시작가</label>
+        <span style="display:block; font-size: 13px; color: #777; margin-bottom:6px;">
+          ※ 경매 시작가는 최소 10,000원 이상이며 10,000원 단위로 입력해주세요.
+        </span>
+        <input type="number" name="startPrice" id="startPrice" step="10000" min="10000" placeholder="₩ 단위">
+      </div>
+      <div class="form-step d-none" id="step5">
+        <label>즉시 낙찰 가능 여부</label>
+        <span style="display:block; font-size: 13px; color: #777; margin-bottom:6px;">
+          ※ 즉시 낙찰이 가능할 경우, 설정된 즉시 입찰가로 입찰자가 낙찰을 확정할 수 있습니다.
+        </span>
+        <select name="isDirect" id="isDirect">
+          <option value="">선택하세요</option>
+          <option value="Y">가능</option>
+          <option value="N">불가능</option>
+        </select>
+      </div>
+      <div class="form-step d-none" id="step6">
+        <label>즉시 입찰가
+          <span id="bidHint" style="display:block; font-size: 13px; color: #777;">
+              ※ 즉시 입찰가는 경매 시작가보다 작거나 같고, 1,000원 단위로 입력해주세요.
+          </span>
+        </label>
+        <input type="number" name="endPrice" id="endPrice" placeholder="₩ 단위 (선택사항)" min="1000" step="1000">
+      </div>
+    </div>
+	
+	<!-- STEP 3 -->
+<div class="step-section d-none" data-step="3">
+  <div class="form-step" id="step7">
+    <label>경매 시작일</label>
+    <input type="date" name="auctionStartDayStr" id="auctionStartDay">
+    <label style="margin-top:8px">경매 시작 시각 (선택)</label>
+    <input type="time" name="auctionStartTimeStr" id="auctionStartTime">
+    <small style="font-size:13px; color:#777;">※ 미입력 시 00:00 으로 적용됩니다.</small>
+  </div>
+  <div class="form-step d-none" id="step8">
+    <label>경매 종료일</label>
+    <input type="date" name="auctionEndDayStr" id="auctionEndDay">
+    <label style="margin-top:8px">경매 종료 시각 (선택)</label>
+    <input type="time" name="auctionEndTimeStr" id="auctionEndTime">
+    <small style="font-size:13px; color:#777;">※ 미입력 시 23:59 으로 적용됩니다.</small>
+    <div id="auctionDuration" style="margin-top:6px; font-size:13px; color:#555;"></div>
+  </div>
+  <div class="form-step d-none" id="step9">
+    <label>업무 시작일</label>
+    <input type="date" name="startDate" id="startDate">
+  </div>
+  <div class="form-step d-none" id="step10">
+    <label>납기 희망일</label>
+    <input type="date" name="dueDate" id="dueDate">
+    <div id="workDuration" style="margin-top:6px; font-size:13px; color:#555;"></div>
+  </div>
+  <div class="form-step d-none" id="step10b">
+    <label>근무지 지역</label>
+    <select name="regionId" id="regionId" required>
+      <option value="1">서울</option>
+      <option value="2">부산</option>
+    </select>
+  </div>
+</div>
+
+    <!-- STEP 4 -->
+    <div class="step-section d-none" data-step="4">
+      <div class="form-step" id="step11">
+        <label>경매 제목</label>
+        <input type="text" name="title" id="title" required>
+      </div>
+      <div class="form-step" id="step12">
+        <label>상세 설명</label>
+        <textarea name="description" id="description" required></textarea>
+      </div>
+    </div>
+	<div class="nav-btns">
+	  <button type="button" class="btn btn-prev">이전</button>
+	  <button type="button" class="btn btn-next">다음</button>
+	</div>
+	<div class="nav-btns d-none" id="submitSection">
+	  <button type="button" class="btn btn-prev">이전</button>
+	  <button type="submit" class="btn">경매 등록</button>
+	</div>
+  </form>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 4;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    showStep(currentStep);
+    handleStepReveal();
+    handleFieldValidations();
+    setupNavButtons();
+    bindAuctionEvents();
+  });
+
+  function showStep(step) {
+    document.querySelectorAll('.step-section').forEach(section => section.classList.add('d-none'));
+    const currentSection = document.querySelector(`.step-section[data-step="${step}"]`);
+    if (currentSection) currentSection.classList.remove('d-none');
+
+    document.getElementById("stepIndicator").textContent = `${step} / ${totalSteps}`;
+
+    const navBtns = document.querySelector(".nav-btns");
+    const submitBtns = document.getElementById("submitSection");
+
+    if (step < totalSteps) {
+      navBtns.classList.remove("d-none");
+      submitBtns.classList.add("d-none");
+    } else {
+      navBtns.classList.add("d-none");
+      submitBtns.classList.remove("d-none");
+    }
+  }
+
+  function setupNavButtons() {
+    document.querySelectorAll(".btn-prev").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (currentStep > 1) {
+          currentStep--;
+          showStep(currentStep);
+        }
+      });
+    });
+
+    document.querySelectorAll(".btn-next").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!validateStep(currentStep)) return;
+        if (currentStep < totalSteps) {
+          currentStep++;
+          showStep(currentStep);
+        }
+      });
+    });
+  }
+
+  function handleStepReveal() {
+    const stepMap = {
+      category: "step2",
+      applyType: "step3",
+      requestType: null,
+      startPrice: "step5",
+      isDirect: "step6",
+      endPrice: null,
+      auctionStartDay: "step8",
+      auctionEndDay: "step9",
+      startDate: "step10",
+      dueDate: "step10b",
+      regionId: null,
+      title: "step12",
+      description: null
+    };
+
+    Object.entries(stepMap).forEach(([triggerId, nextStepId]) => {
+      const trigger = document.getElementById(triggerId);
+      const nextEl = nextStepId ? document.getElementById(nextStepId) : null;
+
+      if (trigger) {
+        const showNext = () => {
+          const isFilled = trigger.type === 'number'
+            ? trigger.value.trim() !== "" && !isNaN(parseInt(trigger.value))
+            : trigger.value;
+
+          if (isFilled) {
+            if (nextEl && nextEl.classList.contains('d-none')) {
+              nextEl.classList.remove('d-none');
+            }
+
+            const section = trigger.closest('.step-section');
+            const hidden = section.querySelectorAll('.form-step.d-none');
+            if (hidden.length === 0) {
+              if (section.dataset.step === "2") {
+                const isDirectVal = document.getElementById("isDirect").value;
+                const endVal = document.getElementById("endPrice").value.trim();
+                if (isDirectVal === "Y" && endVal === "") return;
+              }
+              const nextBtn = section.querySelector(".btn-next");
+              if (nextBtn) nextBtn.classList.remove("d-none");
+            }
+          }
+        };
+
+        trigger.addEventListener('change', showNext);
+        trigger.addEventListener('input', showNext);
+      }
+    });
+  }
+
+  function handleFieldValidations() {
+    const isDirect = document.getElementById("isDirect");
+    const endPrice = document.getElementById("endPrice");
+    const startPrice = document.getElementById("startPrice");
+
+    isDirect.addEventListener("change", function () {
+      const enable = this.value === "Y";
+      endPrice.disabled = !enable;
+      if (!enable) endPrice.value = "";
+    });
+
+    endPrice.addEventListener("blur", function () {
+      const start = parseInt(startPrice.value, 10);
+      const end = parseInt(this.value, 10);
+      if (isNaN(end)) return;
+
+      if (end <= 0) {
+        alert("즉시 입찰가는 0보다 큰 값이어야 합니다.");
+        this.value = "";
+        this.focus();
+        return;
+      }
+
+      if (end % 1000 !== 0) {
+        alert("즉시 입찰가는 1,000원 단위로 입력해주세요.");
+        this.value = "";
+        this.focus();
+        return;
+      }
+
+      if (isDirect.value === "Y" && !isNaN(start) && end > start) {
+        alert("즉시 입찰가는 경매 시작가보다 작거나 같아야 합니다.");
+        this.value = "";
+        this.focus();
+        return;
+      }
+    });
+
+    startPrice.addEventListener("blur", function () {
+      const value = parseInt(this.value, 10);
+      if (isNaN(value)) return;
+      if (value < 10000) {
+        alert("경매 시작가는 최소 10,000원 이상이어야 합니다.");
+        this.value = "";
+      } else if (value % 10000 !== 0) {
+        alert("경매 시작가는 10,000원 단위로 입력해주세요.");
+        this.value = Math.floor(value / 10000) * 10000;
+      }
+    });
+
+    document.getElementById("auctionStartDay").addEventListener("change", () => {
+      if (!validateAuctionStartTime()) return;
+      updateAuctionDuration();
+    });
+
+    document.getElementById("auctionEndDay").addEventListener("change", () => {
+      updateAuctionDuration();
+      validateWorkDates();
+    });
+
+    document.getElementById("startDate").addEventListener("change", () => {
+      validateWorkDates();
+      updateWorkDuration();
+    });
+
+    document.getElementById("dueDate").addEventListener("change", () => {
+      validateDueDate();
+      updateWorkDuration();
+    });
+
+    document.getElementById("auctionStartTime").addEventListener("change", () => {
+      validateAuctionStartTime();
+    });
+  }
+
+  function validateAuctionStartTime() {
+    const startDateInput = document.getElementById("auctionStartDay");
+    const startTimeInput = document.getElementById("auctionStartTime");
+
+    const startDateVal = startDateInput.value;
+    const startTimeVal = startTimeInput.value || "00:00";
+
+    if (!startDateVal) return true;
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
+    const inputDateTime = new Date(`${startDateVal}T${startTimeVal}`);
+
+    const startDateOnly = new Date(startDateVal);
+    startDateOnly.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (startDateOnly < today) {
+      alert("경매 시작일은 오늘 이전일 수 없습니다.");
+      startDateInput.value = "";
+      startTimeInput.value = "";
+      document.getElementById("auctionDuration").textContent = "";
+      return false;
+    }
+
+    if (startDateVal === todayStr && inputDateTime <= now) {
+      alert("오늘 날짜일 경우, 현재 시각보다 이후로 설정해주세요.");
+      startTimeInput.value = "";
+      document.getElementById("auctionDuration").textContent = "";
+      return false;
+    }
+
+    return true;
+  }
+
+  function validateWorkDates() {
+    const auctionEnd = new Date(document.getElementById("auctionEndDay").value);
+    const start = new Date(document.getElementById("startDate").value);
+    if (start && auctionEnd && start <= auctionEnd) {
+      alert("업무 시작일은 경매 종료일 이후여야 합니다.");
+      document.getElementById("startDate").value = "";
+    }
+  }
+
+  function validateDueDate() {
+    const start = new Date(document.getElementById("startDate").value);
+    const due = new Date(document.getElementById("dueDate").value);
+    if (due && start && due <= start) {
+      alert("납기 희망일은 업무 시작일 이후여야 합니다.");
+      document.getElementById("dueDate").value = "";
+    }
+  }
+
+  function updateAuctionDuration() {
+    const startDate = document.getElementById("auctionStartDay").value;
+    const startTime = document.getElementById("auctionStartTime").value || "00:00";
+    const endDate = document.getElementById("auctionEndDay").value;
+    const endTime = document.getElementById("auctionEndTime").value || "23:59";
+    const output = document.getElementById("auctionDuration");
+
+    if (!startDate || !endDate) return output.textContent = "";
+
+    const start = new Date(`${startDate}T${startTime}`);
+    const end = new Date(`${endDate}T${endTime}`);
+
+    if (end <= start) {
+      output.textContent = "";
+      return;
+    }
+
+    const diff = end - start;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    output.textContent = `경매 기간: ${days}일 ${hours}시간 ${minutes}분`;
+  }
+
+  function updateWorkDuration() {
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("dueDate").value;
+    const output = document.getElementById("workDuration");
+
+    if (!start || !end) return output.textContent = "";
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const diff = (endDate - startDate) / (1000 * 60 * 60 * 24);
+    if (diff >= 0) {
+      output.textContent = `작업 기간: ${Math.floor(diff)}일`;
+    } else {
+      output.textContent = "";
+    }
+  }
+
+  function validateForm() {
+    const requiredFields = [
+      "category", "applyType", "requestType", "startPrice",
+      "auctionStartDay", "auctionEndDay", "startDate", "dueDate",
+      "regionId", "title", "description"
+    ];
+    for (let id of requiredFields) {
+      const el = document.getElementById(id);
+      if (!el || el.value.trim() === "") {
+        alert("모든 필수 입력값을 입력해주세요.");
+        el.focus();
+        return false;
+      }
+    }
+
+    if (document.getElementById("isDirect").value === "Y") {
+      const end = document.getElementById("endPrice").value;
+      if (end.trim() === "") {
+        alert("즉시입찰가를 입력해주세요.");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function validateStep(step) {
+    const getVal = (id) => document.getElementById(id)?.value?.trim() || "";
+
+    if (step === 1) {
+      if (!getVal("category")) return alertAndFocus("category", "카테고리를 선택해주세요.");
+      if (!getVal("applyType")) return alertAndFocus("applyType", "지원 방식을 선택해주세요.");
+      if (!getVal("requestType")) return alertAndFocus("requestType", "경매 주체를 선택해주세요.");
+    }
+
+    if (step === 2) {
+      const startPrice = parseInt(getVal("startPrice"), 10);
+      const isDirect = getVal("isDirect");
+      const endPriceVal = getVal("endPrice");
+      const endPrice = parseInt(endPriceVal, 10);
+
+      if (isNaN(startPrice) || startPrice < 10000 || startPrice % 10000 !== 0) {
+        return alertAndFocus("startPrice", "경매 시작가는 10,000원 이상이며 10,000원 단위여야 합니다.");
+      }
+
+      if (!isDirect) return alertAndFocus("isDirect", "즉시 낙찰 여부를 선택해주세요.");
+
+      if (isDirect === "Y") {
+        if (!endPriceVal || isNaN(endPrice)) {
+          return alertAndFocus("endPrice", "즉시 입찰가를 입력해주세요.");
+        }
+        if (endPrice > startPrice) {
+          return alertAndFocus("endPrice", "즉시 입찰가는 시작가보다 작아야 합니다.");
+        }
+        if (endPrice % 1000 !== 0) {
+          return alertAndFocus("endPrice", "즉시 입찰가는 1,000원 단위여야 합니다.");
+        }
+      }
+    }
+
+    if (step === 3) {
+      if (!getVal("auctionStartDay")) return alertAndFocus("auctionStartDay", "경매 시작일을 선택해주세요.");
+      if (!validateAuctionStartTime()) return false;
+      if (!getVal("auctionEndDay")) return alertAndFocus("auctionEndDay", "경매 종료일을 선택해주세요.");
+      if (!getVal("startDate")) return alertAndFocus("startDate", "업무 시작일을 선택해주세요.");
+      if (!getVal("dueDate")) return alertAndFocus("dueDate", "납기 희망일을 선택해주세요.");
+      if (!getVal("regionId")) return alertAndFocus("regionId", "근무 지역을 선택해주세요.");
+    }
+
+    if (step === 4) {
+      if (!getVal("title")) return alertAndFocus("title", "제목을 입력해주세요.");
+      if (!getVal("description")) return alertAndFocus("description", "설명을 입력해주세요.");
+    }
+
+    return true;
+  }
+
+  function alertAndFocus(id, msg) {
+    alert(msg);
+    const el = document.getElementById(id);
+    if (el) el.focus();
+    return false;
+  }
+
+  function bindAuctionEvents() {
+    ["auctionStartDay", "auctionStartTime", "auctionEndDay", "auctionEndTime"].forEach(id => {
+      document.getElementById(id)?.addEventListener("change", () => {
+        if (validateAuctionStartTime()) updateAuctionDuration();
+      });
+    });
+
+    ["startDate", "dueDate"].forEach(id => {
+      document.getElementById(id)?.addEventListener("change", updateWorkDuration);
+    });
+  }
+
+  document.querySelector("#auctionForm").addEventListener("submit", function (e) {
+    if (!validateForm()) {
+      e.preventDefault();
+    }
+  });
+ </script>
+</body>
+</html>
