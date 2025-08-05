@@ -102,8 +102,23 @@
         </div>
 
         <div style="margin-top: 10px;">
-          <span class="tag" th:text="${auction.serviceId}">개발</span>
-          <span class="tag" th:text="${auction.regionId}">서울</span>
+          <span class="tag"
+		      th:text="${auction.serviceId == 0 ? 'IT/프로그래밍' : 
+		               auction.serviceId == 1 ? '디자인' : 
+		               auction.serviceId == 2 ? '마케팅' : 
+		               auction.serviceId == 3 ? '번역/통역' : 
+		               '기타'}">
+		개발
+		</span>
+          <span class="tag"
+		      th:text="${auction.regionId == 1 ? '서울' : 
+		               auction.regionId == 2 ? '경기' :
+		               auction.regionId == 3 ? '인천' :
+		               auction.regionId == 4 ? '부산' :
+		               auction.regionId == 5 ? '대구' :
+		               '기타'}">
+		서울
+		</span>
           <span class="tag" th:if="${auction.isDirect == 'Y'}">즉시 낙찰 가능</span>
           <span class="tag" th:if="${auction.endPrice != null}" th:text="'즉시가: ' + ${#numbers.formatInteger(auction.endPrice, 0, 'COMMA')} + '원'"></span>
         </div>

@@ -79,30 +79,48 @@
       <div class="content" th:text="${auction.description}"></div>
     </div>
 
-    <div class="auction-section">
-      <h4>지역</h4>
-      <div class="content" th:text="${auction.regionId}"></div>
-    </div>
+	 <div class="auction-section">
+	  <h4>지역</h4>
+	  <div class="content" th:switch="${auction.regionId}">
+	    <span th:case="1">서울</span>
+	    <span th:case="2">경기</span>
+	    <span th:case="3">인천</span>
+	    <span th:case="*">기타</span>
+	  </div>
+	</div>
 
-    <div class="auction-section">
-      <h4>서비스 ID</h4>
-      <div class="content" th:text="${auction.serviceId}"></div>
-    </div>
+	<div class="auction-section">
+	  <h4>서비스 분야</h4>
+	  <div class="content" th:switch="${auction.serviceId}">
+	    <span th:case="0">IT/프로그래밍</span>
+	    <span th:case="1">디자인</span>
+	    <span th:case="2">번역</span>
+	    <span th:case="*">기타</span>
+	  </div>
+	</div>
 
     <div class="auction-section">
       <h4>경매 유형</h4>
-      <div class="content" th:text="${auction.auctionType}"></div>
+      <div class="content">일반경매</div>
     </div>
 
     <div class="auction-section">
-      <h4>요청 유형</h4>
-      <div class="content" th:text="${auction.requestType}"></div>
-    </div>
+	  <h4>요청 유형</h4>
+	  <div class="content" th:switch="${auction.requestType}">
+	    <span th:case="'individual'">개인</span>
+	    <span th:case="'company'">기업</span>
+	    <span th:case="*">기타</span>
+	  </div>
+	</div>
 
     <div class="auction-section">
-      <h4>신청 방식</h4>
-      <div class="content" th:text="${auction.applyType}"></div>
-    </div>
+	  <h4>신청 방식</h4>
+	  <div class="content" th:switch="${auction.applyType}">
+	    <span th:case="'general'">일반작업</span>
+	    <span th:case="'interview'">인터뷰</span>
+	    <span th:case="*">기타</span>
+	  </div>
+	</div>
 
     <div class="auction-section">
       <h4>경매 기간</h4>
@@ -128,7 +146,7 @@
 
     <div class="auction-section">
       <h4>현재 입찰가</h4>
-<!--       <div class="content" th:text="${auction.currentPrice} + '원'"></div> -->
+      <div class="content">0원</div>
     </div>
 
     <div class="auction-section" th:if="${auction.isDirect == 'Y'}">
@@ -151,7 +169,10 @@
       <div class="content" th:text="${auction.viewCount} + ' / ' + ${auction.bidCount}"></div>
     </div>
 
-    <button class="bid-button">경매 입찰하기</button>
+    <div class="auction-section">
+	  <a href="/boot/common/coming-soon" class="bid-button">경매 입찰하기</a>
+	</div>
+	
   </div>
 </div>
 </body>
